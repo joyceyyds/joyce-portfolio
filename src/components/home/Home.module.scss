@@ -1,49 +1,559 @@
-@import "../../variables.modules";
+.homeScene {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #59643f;
+}
 
-h1 {
-  font-size: 2rem;
-  text-align: center;
-  @media only screen and (min-width: 940px) {
-    font-size: 3rem;
-    text-align: left;
+.homeStage {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1672 / 941;
+  transform: none;
+  pointer-events: none;
+}
+
+.homeStageExiting {
+  animation: homeStageExit 250ms ease-out forwards;
+}
+
+.background {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.treeLayer,
+.houseLayer,
+.catTailLayer {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+  user-select: none;
+  pointer-events: none;
+}
+
+.treeLayer {
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 40%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  line-height: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  outline: none;
+  appearance: none;
+}
+
+.treeMotion,
+.treeImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.treeMotion {
+  transform-origin: 8% 88%;
+}
+
+.treeLayer:focus-visible .treeImage {
+  filter: brightness(1.035);
+}
+
+.treeShaking {
+  animation: treeShake 450ms ease-out both;
+}
+
+.fallingLeavesLayer {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.fallingLeaf {
+  position: absolute;
+  z-index: 2;
+  top: var(--leaf-top);
+  left: var(--leaf-left);
+  display: block;
+  width: var(--leaf-size);
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: center;
+  animation:
+    leafFall var(--leaf-duration) linear var(--leaf-delay) forwards,
+    leafFade var(--leaf-duration) linear var(--leaf-delay) forwards;
+  will-change: transform, opacity;
+}
+
+.smokeLayer {
+  position: absolute;
+  z-index: 1;
+  top: 59.65%;
+  left: 78.7%;
+  width: 9%;
+  aspect-ratio: 3 / 2;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.smoke {
+  --smoke-start-scale: 0.18;
+  --smoke-peak-opacity: 0.46;
+  --smoke-x-25: 12%;
+  --smoke-x-50: 30%;
+  --smoke-x-75: 46%;
+  --smoke-final-x: 70%;
+  --smoke-final-y: -170%;
+  --smoke-final-scale: 0.95;
+  --smoke-start-rotation: -2deg;
+  --smoke-mid-rotation: 2deg;
+  --smoke-final-rotation: 7deg;
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: 23% 91%;
+  animation: chimneySmoke 7.2s linear infinite both;
+  will-change: transform, opacity;
+
+  &:nth-child(2) {
+    --smoke-start-scale: 0.16;
+    --smoke-peak-opacity: 0.42;
+    --smoke-x-25: 14%;
+    --smoke-x-50: 34%;
+    --smoke-x-75: 54%;
+    --smoke-final-x: 82%;
+    --smoke-final-y: -185%;
+    --smoke-final-scale: 1;
+    --smoke-start-rotation: -1deg;
+    --smoke-mid-rotation: 3deg;
+    --smoke-final-rotation: 6deg;
+    animation-delay: 2.4s;
+  }
+
+  &:nth-child(3) {
+    --smoke-start-scale: 0.2;
+    --smoke-peak-opacity: 0.44;
+    --smoke-x-25: 9%;
+    --smoke-x-50: 24%;
+    --smoke-x-75: 38%;
+    --smoke-final-x: 58%;
+    --smoke-final-y: -160%;
+    --smoke-final-scale: 0.88;
+    --smoke-start-rotation: -3deg;
+    --smoke-mid-rotation: 1deg;
+    --smoke-final-rotation: 5deg;
+    animation-delay: 4.8s;
   }
 }
 
-h2 {
-  font-size: 1.25rem;
-  text-align: center;
-  @media only screen and (min-width: 940px) {
-    font-size: 2rem;
-    text-align: left;
+.houseLayer {
+  z-index: 1;
+  top: 67.4%;
+  left: 72.1%;
+  width: 13.7%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: 0;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateY(20px);
+}
+
+.houseImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+  filter: brightness(1);
+  transition: filter 220ms ease;
+}
+
+.houseHint {
+  position: absolute;
+  z-index: 3;
+  top: 67.5%;
+  left: 70.5%;
+  display: block;
+  padding: 0.35rem 0.45rem;
+  color: rgba(38, 57, 68, 0.82);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.045em;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0.84;
+  cursor: pointer;
+  pointer-events: auto;
+  outline: none;
+  animation: houseHintBreath 3.3s ease-in-out infinite;
+  transition: opacity 200ms ease;
+}
+
+.houseLayer:hover .houseImage,
+.houseLayer:focus-visible .houseImage {
+  filter: brightness(1.12) saturate(1.04);
+}
+
+.houseLayerEntering .houseImage {
+  filter: brightness(1.14) saturate(1.04);
+}
+
+.houseLayer:hover + .houseHint,
+.houseLayer:focus-visible + .houseHint,
+.houseHint:hover,
+.houseHint:focus-visible {
+  opacity: 1;
+  animation: none;
+}
+
+.houseHint:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.catTailLayer {
+  z-index: 1;
+  top: 74.1%;
+  left: 38.5%;
+  width: 1.4%;
+  transform: rotate(90deg);
+  transform-origin: 50% 100%;
+}
+
+.catTailMotion,
+.catTailImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.catTailMotion {
+  transform-origin: 72% 96%;
+  animation: catTailWag 4.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  will-change: transform;
+}
+
+@keyframes treeShake {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  20% {
+    transform: rotate(-0.7deg);
+  }
+
+  40% {
+    transform: rotate(0.9deg);
+  }
+
+  60% {
+    transform: rotate(-0.5deg);
+  }
+
+  80% {
+    transform: rotate(0.25deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
   }
 }
 
+@keyframes leafFall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
 
-.hand {
-  animation-name: wave;
-  animation-duration: 2.5s;
-  animation-iteration-count: infinite;
-  transform-origin: 70% 70%;
-  display: inline-block;
+  25% {
+    transform: translate3d(var(--leaf-drift-25), var(--leaf-fall-25), 0) rotate(var(--leaf-rotation-25));
+  }
+
+  50% {
+    transform: translate3d(var(--leaf-drift-50), var(--leaf-fall-50), 0) rotate(var(--leaf-rotation-50));
+  }
+
+  75% {
+    transform: translate3d(var(--leaf-drift-75), var(--leaf-fall-75), 0) rotate(var(--leaf-rotation-75));
+  }
+
+  100% {
+    transform: translate3d(var(--leaf-drift), var(--leaf-fall), 0) rotate(var(--leaf-rotation));
+  }
 }
 
-a {
-  color: $dark;
-  transition: color 200ms ease;
+@keyframes leafFade {
+  0% {
+    opacity: 0;
+  }
+
+  5%,
+  75% {
+    opacity: 1;
+  }
+
+  90% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
-a:hover {
-  color: $lightgray;
-  transition: color 200ms ease;
+@keyframes catTailWag {
+  0% {
+    transform: rotate(-8deg) skewX(-1deg);
+  }
+
+  18% {
+    transform: rotate(3deg) skewX(0.5deg);
+  }
+
+  35% {
+    transform: rotate(18deg) skewX(2deg);
+  }
+
+  52% {
+    transform: rotate(8deg) skewX(1deg);
+  }
+
+  70% {
+    transform: rotate(-10deg) skewX(-1.2deg);
+  }
+
+  87% {
+    transform: rotate(-16deg) skewX(-2deg);
+  }
+
+  100% {
+    transform: rotate(-8deg) skewX(-1deg);
+  }
 }
 
-@keyframes wave {
-  0% { transform: rotate( 0.0deg) }
-  10% { transform: rotate(14.0deg) }
-  20% { transform: rotate(-8.0deg) }
-  30% { transform: rotate(14.0deg) }
-  40% { transform: rotate(-4.0deg) }
-  50% { transform: rotate(10.0deg) }
-  60% { transform: rotate( 0.0deg) }
-  100% { transform: rotate( 0.0deg) }
+@keyframes houseHintBreath {
+  0%,
+  100% {
+    opacity: 0.84;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes chimneySmoke {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(var(--smoke-start-rotation)) scale(var(--smoke-start-scale));
+  }
+
+  8% {
+    opacity: 0.25;
+    transform: translate(4%, -10%) rotate(-1deg) scale(0.25);
+  }
+
+  20% {
+    opacity: var(--smoke-peak-opacity);
+    transform: translate(9%, -28%) rotate(0deg) scale(0.36);
+  }
+
+  45% {
+    opacity: 0.4;
+    transform: translate(var(--smoke-x-25), -67%) rotate(var(--smoke-mid-rotation)) scale(0.54);
+  }
+
+  70% {
+    opacity: 0.24;
+    transform: translate(var(--smoke-x-50), -112%) rotate(4deg) scale(0.72);
+  }
+
+  85% {
+    opacity: 0.12;
+    transform: translate(var(--smoke-x-75), -140%) rotate(5.5deg) scale(0.83);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(var(--smoke-final-x), var(--smoke-final-y)) rotate(var(--smoke-final-rotation)) scale(var(--smoke-final-scale));
+  }
+}
+
+.heroContent {
+  position: absolute;
+  z-index: 1;
+  top: 24%;
+  left: 52%;
+  width: min(40%, 31rem);
+  color: #263944;
+  text-align: left;
+}
+
+.heroExiting {
+  transform-origin: center;
+  animation: homeElementExit 250ms ease-out forwards;
+}
+
+@keyframes homeStageExit {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.88;
+    filter: blur(1px);
+    transform: scale(1.015);
+  }
+}
+
+@keyframes homeElementExit {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.88;
+    filter: blur(1px);
+    transform: scale(1.015);
+  }
+}
+
+.heroTitle,
+.metadata,
+.disciplines,
+.introduction {
+  margin: 0;
+}
+
+.heroTitle {
+  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+}
+
+.metadata {
+  margin-top: clamp(0.65rem, 1vw, 0.9rem);
+  font-size: clamp(0.68rem, 0.82vw, 0.82rem);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.09em;
+}
+
+.disciplines {
+  margin-top: clamp(1rem, 1.5vw, 1.35rem);
+  font-size: clamp(0.95rem, 1.35vw, 1.25rem);
+  font-weight: 400;
+  line-height: 1.45;
+  letter-spacing: 0.025em;
+}
+
+.introduction {
+  margin-top: clamp(0.5rem, 0.85vw, 0.8rem);
+  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0.025em;
+}
+
+@media only screen and (max-width: 700px) {
+  .homeStage {
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .homeStageExiting {
+    animation-name: homeStageExitMobile;
+  }
+
+  .heroContent {
+    top: 10%;
+    left: 8%;
+    width: 84%;
+  }
+
+  .heroTitle {
+    font-size: clamp(3.5rem, 18vw, 5.5rem);
+  }
+}
+
+@keyframes homeStageExitMobile {
+  from {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  to {
+    opacity: 0.88;
+    filter: blur(1px);
+    transform: translate(-50%, -50%) scale(1.015);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smokeLayer {
+    display: none;
+  }
+
+  .treeShaking,
+  .fallingLeaf,
+  .catTailMotion {
+    animation: none;
+  }
+
+  .houseHint {
+    animation: none;
+    opacity: 0.85;
+  }
+
+  .homeStageExiting,
+  .heroExiting {
+    animation: none;
+  }
 }

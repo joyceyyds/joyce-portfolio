@@ -1,0 +1,12 @@
+.overlay{position:fixed;inset:0;z-index:19;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.30);}
+.filmInterface{position:relative;width:min(900px,88vw);height:min(720px,86vh);color:#f7f1e6;text-align:center;animation:filmAppear 300ms ease-out both;}
+.playerInterface{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
+.videoFrame{display:flex;align-items:center;justify-content:center;max-width:90vw;max-height:80vh;}
+.video{display:block;width:auto;height:auto;max-width:90vw;max-height:80vh;object-fit:contain;}
+.visualGroup{position:absolute;inset:0;transform:translateY(-12px);}
+.carouselFrame{position:absolute;top:4%;left:0;width:100%;height:82%;}
+.filmInfo{position:absolute;top:calc(45% + 225.5px);right:0;left:0;display:grid;justify-items:center;gap:6px;}
+.filmInfo strong{font-size:clamp(1rem,1.5vw,1.35rem);font-weight:500;}
+.filmInfo span{font-size:clamp(.62rem,.72vw,.76rem);letter-spacing:.16em;opacity:.68;}
+@keyframes filmAppear{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.filmInterface{animation:none}}

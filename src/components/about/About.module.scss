@@ -1,21 +1,555 @@
-@import "../../variables.modules";
-
-.pink {
-  color: $pink;
+.aboutScene {
+  --about-stage-scale: 0.86;
+  --about-open-width: min(66vw, calc(68vh * 1535 / 992));
+  --about-open-width: min(66vw, calc(68dvh * 1535 / 992));
+  --about-folder-height: calc(var(--about-open-width) * 992 / 1535);
+  --about-closed-height: calc(var(--about-folder-height) * var(--about-stage-scale));
+  --about-closed-offset: min(calc(var(--about-closed-height) * 994 / 1402 / 2), 22vw);
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: #3d281d;
 }
 
-.green {
-  color: $green;
+.aboutScene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('../../assets/about/about-wood-background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.88);
+  pointer-events: none;
+  transition: filter 600ms ease;
 }
 
-.skills {
-  columns: 1;
-  @media only screen and (min-width: 940px) {
-    columns: 2;
+.folderArea,
+.aboutOpenArea,
+.aboutEnvironment {
+  position: absolute;
+  inset: clamp(4.5rem, 8vh, 6rem) 0 0;
+  display: grid;
+  place-items: center;
+}
+
+.folderArea,
+.aboutOpenArea {
+  z-index: 1;
+}
+
+.aboutEnvironment {
+  z-index: 2;
+  pointer-events: none;
+}
+
+.aboutEnvironmentStage {
+  position: relative;
+  width: var(--about-open-width);
+  aspect-ratio: 1535 / 992;
+  overflow: visible;
+  transform: translateY(3.5vh) scale(var(--about-stage-scale));
+}
+
+.aboutLightOverlay {
+  position: absolute;
+  top: -29.4%;
+  left: -19.3%;
+  z-index: 15000;
+  display: block;
+  width: 136.0%;
+  height: auto;
+  max-width: none;
+  opacity: 0.62;
+  pointer-events: none;
+  user-select: none;
+  transform: scale(1.05, 1.39);
+  transform-origin: center;
+  transition: opacity 600ms ease;
+}
+
+.folderArea {
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.folderButton {
+  display: block;
+  width: auto;
+  height: var(--about-closed-height);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  cursor: pointer;
+  filter: brightness(1.04);
+  transform: translateX(var(--about-closed-offset)) translateY(3.5vh);
+  transition: transform 250ms ease, filter 600ms ease;
+}
+
+.folderClosed {
+  display: block;
+  width: auto;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  user-select: none;
+}
+
+.folderButton:hover,
+.folderButton:focus-visible {
+  transform: translateX(var(--about-closed-offset)) translateY(calc(3.5vh - 3px)) scale(1.01);
+}
+
+.folderButton:focus-visible,
+.interactiveAsset:focus-visible {
+  outline: 1px solid rgba(60, 52, 42, 0.55);
+  outline-offset: 0.3rem;
+}
+
+.aboutOpenArea {
+  padding: clamp(0.75rem, 2vw, 1.5rem);
+  animation: revealOpenFolder 180ms ease-out both;
+}
+
+.aboutOpenStage {
+  position: relative;
+  width: var(--about-open-width);
+  aspect-ratio: 1535 / 992;
+  overflow: visible;
+  isolation: isolate;
+  filter: brightness(1.04);
+  transform: translateY(3.5vh) scale(var(--about-stage-scale));
+  transition: filter 600ms ease;
+}
+
+.folderOpen,
+.assetLayer,
+.assetLayer img,
+.paperMotion {
+  display: block;
+}
+
+.folderOpen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.lampGlow {
+  position: absolute;
+  top: -2%;
+  left: 12%;
+  z-index: 5;
+  display: none;
+  width: 76%;
+  height: 62%;
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(255, 220, 125, 0.24) 0%,
+    rgba(255, 213, 105, 0.12) 35%,
+    rgba(255, 205, 90, 0.04) 60%,
+    transparent 78%
+  );
+  pointer-events: none;
+}
+
+.aboutLamp {
+  position: absolute;
+  top: -54.3%;
+  left: 31.7%;
+  z-index: 20000;
+  display: block;
+  width: 34.1%;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transition: filter 600ms ease;
+}
+
+.aboutSwitchLamp {
+  position: absolute;
+  top: -60.0%;
+  left: -19.6%;
+  z-index: 19999;
+  display: block;
+  width: 14.0%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  transform-origin: top center;
+  transition: filter 600ms ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    pointer-events: none;
+    user-select: none;
   }
 
-  li {
-    margin: 0;
-    line-height: 1.75;
+  &:hover,
+  &:focus-visible {
+    filter: brightness(1.06);
+  }
+}
+
+.switchAnimating {
+  animation: pullSwitch 500ms cubic-bezier(.22, .72, .25, 1) both;
+  pointer-events: none;
+}
+
+.aboutLightObject {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.lightOff::before {
+  filter: brightness(0.72);
+}
+
+.lightOff .aboutLightOverlay {
+  opacity: 0;
+}
+
+.lightOff .folderButton,
+.lightOff .aboutOpenStage {
+  filter: brightness(0.84);
+}
+
+.lightOff .aboutLamp {
+  filter: brightness(0.78) saturate(0.82);
+}
+
+.lightOff .aboutSwitchLamp {
+  filter: brightness(0.82) saturate(0.85);
+}
+
+@keyframes pullSwitch {
+  0% {
+    transform: translateY(0) scaleY(1);
+  }
+  35% {
+    transform: translateY(42px) scaleY(1.015);
+  }
+  55% {
+    transform: translateY(34px) scaleY(1.008);
+  }
+  72% {
+    transform: translateY(40px) scaleY(1.012);
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+.assetLayer {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  transform-origin: center;
+}
+
+.assetLayer img {
+  width: 100%;
+  height: auto;
+  user-select: none;
+  pointer-events: none;
+}
+
+.paperMotion {
+  width: 100%;
+  transition: transform 220ms ease;
+}
+
+.interactiveAsset {
+  cursor: grab;
+  touch-action: none;
+}
+
+.interactiveAsset:active,
+.draggingAsset {
+  cursor: grabbing;
+}
+
+.interactiveAsset:hover:not(.draggingAsset) .paperMotion,
+.interactiveAsset:focus-visible:not(.draggingAsset) .paperMotion {
+  transform: translateY(-2px) scale(1.025);
+}
+
+.draggingAsset .paperMotion {
+  transform: none;
+  transition: none;
+}
+
+.photo {
+  top: 14%;
+  left: -4.5%;
+  z-index: 10;
+  width: 29.1%;
+  transform: rotate(0.5deg);
+}
+
+.capabilityTicket {
+  top: 18.1%;
+  left: 12.7%;
+  z-index: 20;
+  width: 16.5%;
+  transform: rotate(0.8deg);
+}
+
+.thingsILike {
+  top: 29.8%;
+  left: 28%;
+  z-index: 20;
+  width: 16.1%;
+  transform: rotate(-0.4deg);
+}
+
+.quotePaper {
+  top: 72.9%;
+  left: 18.7%;
+  z-index: 20;
+  width: 28.4%;
+  transform: rotate(-0.6deg);
+}
+
+.internship {
+  top: 16.2%;
+  left: 56.2%;
+  z-index: 20;
+  width: 36.8%;
+  transform: rotate(0deg);
+}
+
+.welcomeTag {
+  top: 54.8%;
+  left: 52.5%;
+  z-index: 30;
+  width: 16.3%;
+  transform: rotate(-13deg);
+}
+
+.contactMailbox {
+  position: absolute;
+  top: 72.2%;
+  left: 82.0%;
+  z-index: 10000;
+  width: 15.9%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  transform: rotate(0deg);
+  transform-origin: bottom center;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .contactMailboxMotion {
+      transform: translateY(-4px) rotate(1deg) scale(1.025);
+    }
+  }
+
+  &:active {
+    .contactMailboxMotion {
+      transform: translateY(-1px) rotate(1deg) scale(0.98);
+    }
+  }
+
+  &:focus-visible {
+    outline: 1px solid rgba(60, 52, 42, 0.55);
+    outline-offset: 0.2rem;
+  }
+}
+
+.contactMailboxMotion {
+  display: block;
+  width: 100%;
+  opacity: 1;
+  transform: translateY(0) rotate(0deg) scale(1);
+  transform-origin: bottom center;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.contactMailboxPressed .contactMailboxMotion,
+.contactMailboxPressed:hover .contactMailboxMotion,
+.contactMailboxPressed:focus-visible .contactMailboxMotion,
+.contactMailboxPressed:active .contactMailboxMotion {
+  animation: contactMailboxPress 130ms ease-out both;
+}
+
+@keyframes contactMailboxPress {
+  0% { transform: translateY(-4px) rotate(1deg) scale(1.025); }
+  48% { transform: translateY(-4px) rotate(1deg) scale(0.97); }
+  100% { transform: translateY(-4px) rotate(1deg) scale(1.02); }
+}
+
+.contactMailboxHint {
+  position: absolute;
+  top: 54%;
+  left: calc(100% + 16px);
+  display: block;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: clamp(0.55rem, 0.72vw, 0.72rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.22);
+  transform: translateY(-50%);
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.contactMailboxHintArrow {
+  margin-left: 0.3em;
+  letter-spacing: 0;
+}
+
+.contactMailbox:hover .contactMailboxHint,
+.contactMailbox:focus-visible .contactMailboxHint {
+  opacity: 1;
+  transform: translateY(calc(-50% - 2px));
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  cursor: zoom-out;
+  animation: revealLightbox 180ms ease-out both;
+}
+
+.lightboxImage {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 80vw;
+  max-height: 82vh;
+  max-height: 82dvh;
+  object-fit: contain;
+  cursor: default;
+  animation: revealFocusedItem 200ms ease both;
+}
+
+.focusedQuote {
+  width: auto;
+  height: auto;
+  max-width: 48vw;
+  max-height: 55vh;
+  max-height: 55dvh;
+  object-fit: contain;
+}
+
+@keyframes revealOpenFolder {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes revealLightbox {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes revealFocusedItem {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .aboutScene {
+    --about-open-width: min(84vw, calc(64vh * 1535 / 992));
+    --about-open-width: min(84vw, calc(64dvh * 1535 / 992));
+  }
+
+  .folderArea,
+  .aboutOpenArea {
+    inset: 4rem 0 0;
+  }
+
+  .folderArea {
+    padding: 1.25rem;
+  }
+
+  .focusedQuote {
+    max-width: 82vw;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folderButton,
+  .paperMotion,
+  .contactMailboxMotion,
+  .contactMailboxHint {
+    transition: none;
+  }
+
+  .folderButton:hover,
+  .folderButton:focus-visible,
+  .interactiveAsset:hover .paperMotion,
+  .interactiveAsset:focus-visible .paperMotion {
+    transform: none;
+  }
+
+  .folderButton,
+  .folderButton:hover,
+  .folderButton:focus-visible {
+    transform: translateX(var(--about-closed-offset)) translateY(3.5vh);
+  }
+
+  .aboutOpenArea,
+  .lightbox,
+  .lightboxImage {
+    animation: none;
+  }
+
+  .contactMailbox:hover .contactMailboxMotion,
+  .contactMailbox:focus-visible .contactMailboxMotion,
+  .contactMailbox:active .contactMailboxMotion {
+    transform: none;
   }
 }

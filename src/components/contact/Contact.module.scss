@@ -1,0 +1,407 @@
+.contactScene {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #809acb;
+}
+
+.contactStage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1662 / 946;
+  overflow: visible;
+  transform: none;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 700px) {
+  .contactStage {
+    top: 50%;
+    left: 50%;
+    width: max(100%, calc(100vh * 1662 / 946));
+    width: max(100%, calc(100dvh * 1662 / 946));
+    transform: translate(-50%, -50%);
+  }
+}
+
+.contactBackground {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.dandelionLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.dandelion {
+  position: absolute;
+  top: var(--y0);
+  left: var(--x0);
+  display: block;
+  width: var(--dandelion-width);
+  height: auto;
+  max-width: none;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  animation: dandelionDrift var(--dandelion-duration) linear var(--dandelion-delay) infinite both;
+  will-change: top, left, transform, opacity;
+}
+
+.contactMailbox {
+  position: absolute;
+  top: 47.3%;
+  left: 50.0%;
+  z-index: 2;
+  display: block;
+  width: 20.6%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: translate(-50%, 0);
+  transform-origin: bottom center;
+  transition: transform 220ms ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+.mailInteraction {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.closedEnvelopeWrapper {
+  position: absolute;
+  z-index: 5;
+  aspect-ratio: 1535 / 944;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+  transform: translate(-50%, 0);
+  transform-origin: center;
+  transition: transform 220ms ease;
+}
+
+.openEnvelopeScene {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 1;
+  animation: openEnvelopeFadeIn 200ms ease-out both;
+}
+
+.closedEnvelope {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.closedEnvelope .closedEnvelopeWrapper {
+  pointer-events: auto;
+  cursor: pointer;
+  animation: closedEnvelopeAppear 360ms ease-out;
+}
+
+.closedEnvelope .closedEnvelopeWrapper:hover,
+.closedEnvelope .closedEnvelopeWrapper:focus-visible {
+  transform: translate(-50%, -3px) scale(1.015);
+}
+
+.openEnvelope .closedEnvelopeWrapper,
+.letterRising .closedEnvelopeWrapper,
+.letterReady .closedEnvelopeWrapper,
+.expandedLetter .closedEnvelopeWrapper {
+  animation: closedEnvelopeFadeOut 200ms ease-out forwards;
+}
+
+.envelopeBack,
+.envelopeBase {
+  position: absolute;
+  display: block;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  transform: translateX(-50%);
+}
+
+.envelopeBack {
+  z-index: 1;
+}
+
+.envelopeBase {
+  z-index: 2;
+}
+
+.letterWrapper {
+  position: absolute;
+  z-index: 3;
+  aspect-ratio: 1535 / 990;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transform-origin: center;
+  container-type: inline-size;
+  transition:
+    top 500ms cubic-bezier(.22, 1, .36, 1),
+    left 500ms cubic-bezier(.22, 1, .36, 1),
+    width 500ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.letterMotion {
+  position: absolute;
+  inset: 0;
+  transform: translateY(58%);
+}
+
+.envelopeFrontButton {
+  position: absolute;
+  z-index: 4;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transform-origin: center;
+  transition: transform 220ms ease;
+}
+
+.envelopeFront {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.openEnvelope .envelopeFrontButton {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.openEnvelope .envelopeFrontButton:hover,
+.openEnvelope .envelopeFrontButton:focus-visible {
+  transform: translate(-50%, -2px);
+}
+
+.letterPaper {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+
+.letterContent {
+  position: absolute;
+  inset: 12% 10% 10% 12%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  color: #493d35;
+  font-family: inherit;
+  pointer-events: none;
+
+  h2 {
+    margin: 0 0 3%;
+    font-size: 5cqw;
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0.045em;
+    white-space: nowrap;
+  }
+
+  p {
+    margin: 0 0 4%;
+    font-size: 3.35cqw;
+    line-height: 1.38;
+  }
+}
+
+.contactLine {
+  display: grid;
+  gap: 1px;
+  margin-bottom: 3%;
+  font-size: 3.2cqw;
+  line-height: 1.28;
+
+  strong {
+    font-size: 0.82em;
+    letter-spacing: 0.1em;
+  }
+}
+
+.letterSignoff {
+  margin-top: auto !important;
+  margin-bottom: 0 !important;
+}
+
+.letterRising .letterMotion {
+  animation: letterSlideOut 1000ms cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.letterReady .letterMotion,
+.expandedLetter .letterMotion {
+  transform: translateY(0);
+}
+
+.letterReady .letterWrapper,
+.expandedLetter .letterWrapper {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.letterReady .letterMotion {
+  transition: transform 200ms ease;
+}
+
+.letterReady .letterWrapper:hover .letterMotion,
+.letterReady .letterWrapper:focus-visible .letterMotion {
+  transform: translateY(-2px) scale(1.01);
+}
+
+.expandedLetter .letterWrapper {
+  z-index: 10;
+}
+
+.contactMailbox:hover {
+  transform: translate(-50%, -3px) scale(1.02);
+}
+
+@keyframes dandelionDrift {
+  0% {
+    top: var(--y0);
+    left: var(--x0);
+    opacity: 0;
+    transform: rotate(var(--r0));
+  }
+  12% {
+    opacity: 0;
+  }
+  20% {
+    opacity: var(--dandelion-opacity);
+  }
+  25% {
+    top: var(--y1);
+    left: var(--x1);
+    transform: rotate(var(--r1));
+  }
+  50% {
+    top: var(--y2);
+    left: var(--x2);
+    opacity: var(--dandelion-mid-opacity);
+    transform: rotate(var(--r2));
+  }
+  70% {
+    opacity: var(--dandelion-opacity);
+  }
+  75% {
+    top: var(--y3);
+    left: var(--x3);
+    transform: rotate(var(--r3));
+  }
+  86% {
+    opacity: 0;
+  }
+  100% {
+    top: var(--y4);
+    left: var(--x4);
+    opacity: 0;
+    transform: rotate(var(--r4));
+  }
+}
+
+@keyframes closedEnvelopeAppear {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes closedEnvelopeFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes openEnvelopeFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes letterSlideOut {
+  from {
+    transform: translateY(58%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .contactMailbox { transition: none; }
+
+  .dandelionLayer { display: none; }
+
+  .closedEnvelopeWrapper,
+  .openEnvelopeScene,
+  .letterWrapper,
+  .letterMotion,
+  .closedEnvelope,
+  .envelopeBack,
+  .envelopeFront {
+    transition: none;
+  }
+}

@@ -1,0 +1,112 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  animation: overlayAppear 400ms ease both;
+}
+
+.interface {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(900px, 88vw);
+  color: #f7f1e6;
+  text-align: center;
+  animation: folderGroupAppear 440ms ease both;
+}
+
+.detailInterface {
+  width: min(1100px, 92vw);
+}
+
+.galleryArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(430px, 68vw);
+  margin: 0 auto;
+}
+
+.galleryHint {
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1.3;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.folderGroup {
+  display: grid;
+  grid-template-columns: 190px;
+  align-items: end;
+  justify-content: center;
+}
+
+.project {
+  display: grid;
+  justify-items: center;
+  gap: 17px;
+  min-width: 0;
+}
+
+.folderStage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 190px;
+  height: 127px;
+}
+
+.projectTitle {
+  font-size: clamp(0.78rem, 0.92vw, 0.94rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+@keyframes overlayAppear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes folderGroupAppear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 760px) {
+  .interface {
+    width: 94vw;
+  }
+
+  .folderGroup {
+    gap: 10px;
+  }
+
+  .galleryArea {
+    width: 92vw;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .interface {
+    animation: none;
+  }
+}

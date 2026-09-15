@@ -1,0 +1,144 @@
+.folder {
+  position: relative;
+  z-index: 1;
+  width: 178px;
+  height: 119px;
+  outline: none;
+  cursor: pointer;
+  perspective: 1500px;
+  transform-origin: bottom;
+}
+
+.back {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 0 16px 16px 16px;
+  background: var(--ai-folder-back);
+  transform-origin: top;
+  transition: box-shadow 300ms ease;
+
+  &::after {
+    position: absolute;
+    bottom: 99%;
+    left: 0;
+    width: 33.333%;
+    height: 11px;
+    border-radius: 16px 16px 0 0;
+    background: var(--ai-folder-back);
+    content: '';
+  }
+
+  &::before {
+    position: absolute;
+    top: -10px;
+    left: 56px;
+    width: 11px;
+    height: 11px;
+    background: var(--ai-folder-back);
+    clip-path: polygon(0 35%, 0 100%, 50% 100%);
+    content: '';
+  }
+}
+
+.paper {
+  position: absolute;
+  inset: 3.3px;
+  border-radius: 16px;
+  transform-origin: bottom;
+  transition: transform 300ms ease;
+  user-select: none;
+}
+
+.paperOne {
+  z-index: 2;
+  background: #d8c7a7;
+}
+
+.paperTwo {
+  z-index: 3;
+  background: #e7d6b7;
+}
+
+.paperThree {
+  z-index: 4;
+  background: #f3e4c9;
+}
+
+.front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+  height: 97.5%;
+  border-radius: 16px 0 16px 16px;
+  background: linear-gradient(
+    180deg,
+    var(--ai-folder-front-top) 0%,
+    var(--ai-folder-front-bottom) 100%
+  );
+  transform-origin: bottom;
+  transition: transform 300ms ease, box-shadow 300ms ease;
+
+  &::after {
+    position: absolute;
+    right: 0;
+    bottom: 99%;
+    width: 61%;
+    height: 11px;
+    border-radius: 16px 16px 0 0;
+    background: var(--ai-folder-front-top);
+    content: '';
+  }
+
+  &::before {
+    position: absolute;
+    top: -7.5px;
+    right: 60%;
+    width: 10px;
+    height: 10px;
+    background: var(--ai-folder-front-top);
+    clip-path: polygon(100% 14%, 50% 100%, 100% 100%);
+    content: '';
+  }
+}
+
+.folder:hover .back {
+  box-shadow: 0 20px 40px rgba(48, 30, 18, 0.16);
+}
+
+.folder:hover .paperOne {
+  transform: rotateX(-20deg);
+}
+
+.folder:hover .paperTwo {
+  transform: rotateX(-30deg);
+}
+
+.folder:hover .paperThree {
+  transform: rotateX(-38deg);
+}
+
+.folder:hover .front {
+  box-shadow:
+    inset 0 20px 40px rgba(255, 232, 196, 0.08),
+    inset 0 -20px 40px rgba(48, 30, 18, 0.16);
+  transform: rotateX(-46deg) translateY(1px);
+}
+
+.folder:focus-visible {
+  outline: 2px solid rgba(247, 241, 230, 0.9);
+  outline-offset: 6px;
+  border-radius: 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back,
+  .paper,
+  .front {
+    transition-duration: 1ms;
+  }
+}

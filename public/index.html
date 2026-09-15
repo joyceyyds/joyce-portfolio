@@ -1,20 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" media="screen">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
 
-    <base href="/">
     <meta
       name="description"
-      content="developer portfolio"
+      content="Joyce 的个人作品集，展示 Product、AI、Content 与 Film 相关项目与创作。"
     />
-    <meta name="keyword" content="portfolio, javascript, developer, frontend, react, dev, front-end, tech, programmer">
-    <title>Developer Portfolio</title>
+    <meta name="keywords" content="Joyce, Portfolio, Product, AI, Content, Film, 产品策划, AI产品, 内容创作, 作品集">
+    <title>Joyce Portfolio</title>
   </head>
   <body>
+    <script>
+      (function (location) {
+        if (location.search.indexOf('?/') !== 0) return;
+
+        var decoded = location.search
+          .slice(2)
+          .split('&')
+          .map(function (part) { return part.replace(/~and~/g, '&'); })
+          .join('?');
+
+        window.history.replaceState(
+          null,
+          '',
+          location.pathname.replace(/\/$/, '') + '/' + decoded + location.hash
+        );
+      }(window.location));
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--

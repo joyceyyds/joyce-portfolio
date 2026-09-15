@@ -1,0 +1,278 @@
+/*
+ * Adapted from “Coffee Espresso Machine Awesome Animated Loader” by 3bdel3ziz-T.
+ * Source: https://uiverse.io/3bdel3ziz-T/strong-gecko-19
+ * Licensed under the MIT License.
+ */
+.overlay {
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #f5eddf;
+  opacity: 1;
+  animation: overlayLifecycle 2300ms ease both;
+}
+
+.scene {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100vw, calc(100vh * 1672 / 941));
+  width: max(100vw, calc(100dvh * 1672 / 941));
+  aspect-ratio: 1672 / 941;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+
+.background {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+}
+
+.coffeeVisual {
+  position: absolute;
+  z-index: 1;
+  top: 50.3%;
+  left: 37.5%;
+  width: 25%;
+}
+
+.coffeeMessage {
+  position: absolute;
+  z-index: 1;
+  top: 47.5%;
+  left: 37.5%;
+  width: 25%;
+  margin: 0;
+  color: #715446;
+  font-size: clamp(14px, 1.15vw, 17px);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.035em;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-100%);
+  animation: coffeeMessageFadeIn 420ms ease forwards;
+}
+
+.coffeeMachine {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  user-select: none;
+}
+
+.coffeeFlow {
+  position: absolute;
+  z-index: 1;
+  top: 49.5%;
+  left: 49.72%;
+  width: 0.56%;
+  height: 21.2%;
+  border-radius: 999px;
+  background-color: rgba(139, 61, 27, 0.58);
+  opacity: 0;
+  pointer-events: none;
+  transform: scaleY(0);
+  transform-origin: top;
+  animation: coffeeFlow 1800ms ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.steamLayer {
+  position: absolute;
+  z-index: 1;
+  top: 53%;
+  left: 40%;
+  width: 20%;
+  height: 18%;
+  pointer-events: none;
+}
+
+.smoke {
+  position: absolute;
+  bottom: 0;
+  width: 7px;
+  height: 18px;
+  background-color: #c9beb2;
+  border-radius: 5px;
+  opacity: 0;
+  animation: smoke 1400ms linear infinite;
+}
+
+.one {
+  left: 20%;
+  animation-delay: 300ms;
+}
+
+.two {
+  left: 40%;
+  animation-delay: 0ms;
+}
+
+.three {
+  right: 40%;
+  animation-delay: 900ms;
+}
+
+.four {
+  right: 20%;
+  animation-delay: 600ms;
+}
+
+.reducedMotion {
+  animation: reducedOverlayLifecycle 650ms ease both;
+
+  .coffeeMessage {
+    opacity: 0.84;
+    animation: none;
+  }
+
+  .coffeeFlow,
+  .smoke {
+    animation: none;
+  }
+
+  .coffeeFlow {
+    display: none;
+  }
+}
+
+.overlayExiting {
+  animation: loaderOverlayExit 300ms ease-out forwards;
+}
+
+.reducedMotion.overlayExiting {
+  animation-duration: 100ms;
+}
+
+@keyframes overlayLifecycle {
+  0% {
+    opacity: 0;
+  }
+
+  8%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes reducedOverlayLifecycle {
+  0% {
+    opacity: 0;
+  }
+
+  30%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes loaderOverlayExit {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes smoke {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+
+  40% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.3;
+    transform: translateY(-10px);
+  }
+
+  80% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+}
+
+@keyframes coffeeFlow {
+  0% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+
+  15% {
+    opacity: 0.42;
+  }
+
+  45% {
+    opacity: 0.58;
+    transform: scaleY(1);
+  }
+
+  75% {
+    opacity: 0.5;
+    transform: scaleY(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scaleY(0);
+  }
+}
+
+@keyframes coffeeMessageFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.84;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: reducedOverlayLifecycle 650ms ease both;
+  }
+
+  .coffeeFlow,
+  .smoke {
+    animation: none;
+  }
+
+  .coffeeFlow {
+    display: none;
+  }
+
+  .coffeeMessage {
+    opacity: 0.84;
+    animation: none;
+  }
+
+}

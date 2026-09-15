@@ -1,33 +1,145 @@
-@import "../variables.modules";
-
-nav {
-  transition: all 400ms;
-  z-index: 1;
+.navbar {
+  position: absolute;
+  z-index: 100;
+  top: 24px;
+  right: 6vw;
+  width: auto;
+  background: transparent;
 }
 
-.dark {
-  background-color: $dark;
+.navGroup {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: clamp(32px, 3vw, 48px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-
-.light {
-  background-color: $white;
-}
-
-.active {
-  border-bottom: 5px solid;
-  border-image-slice: 1;
-}
-
-li {
-  transition: $transition;
+.navItem {
+  color: #f7f1e6;
+  opacity: 1;
+  transition: opacity 200ms ease, transform 200ms ease;
 
   &:hover {
-    transform: translateY(-3px);
-    transition: $transition;
+    opacity: 1;
+    transform: translateY(-1px);
+  }
+
+  &:hover .handDrawnLine path,
+  &:focus-within .handDrawnLine path {
+    stroke-dashoffset: 0;
+    opacity: 0.86;
+    transition: stroke-dashoffset 300ms ease-out, opacity 80ms ease-out;
   }
 }
 
-.link:hover {
-  color: unset;
+.active {
+  opacity: 1;
+
+  .navLabel > span:first-child {
+    font-weight: 600;
+  }
+
+  .englishLabel {
+    font-weight: 500;
+  }
+
+  .handDrawnLine path {
+    stroke-dashoffset: 0;
+    opacity: 0.86;
+  }
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+.link:hover,
+.link:visited {
+  color: inherit;
+}
+
+.navLabel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: inherit;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.1;
+  white-space: nowrap;
+  text-shadow:
+    0 1px 2px rgba(35, 25, 18, 0.45),
+    0 0 5px rgba(35, 25, 18, 0.18);
+
+  > span:first-child {
+    color: #f7f1e6;
+  }
+}
+
+.englishLabel {
+  margin-top: 3px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.11em;
+  color: rgba(247, 241, 230, 0.82);
+}
+
+.handDrawnLine {
+  position: absolute;
+  top: calc(100% + 3px);
+  left: 50%;
+  width: 105%;
+  height: 6px;
+  overflow: visible;
+  pointer-events: none;
+  transform: translateX(-50%);
+
+  path {
+    fill: none;
+    stroke: #a69a48;
+    stroke-width: 1.75px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition: opacity 180ms ease-out, stroke-dashoffset 0ms 180ms;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .navbar {
+    top: 16px;
+    right: 4vw;
+  }
+
+  .navGroup {
+    gap: clamp(14px, 4vw, 22px);
+  }
+
+  .navLabel {
+    font-size: 13px;
+  }
+
+  .englishLabel {
+    margin-top: 2px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navItem:hover .handDrawnLine path,
+  .navItem:focus-within .handDrawnLine path,
+  .active .handDrawnLine path {
+    transition: none;
+  }
 }

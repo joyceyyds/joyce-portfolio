@@ -1,0 +1,106 @@
+.accordion-gallery {
+  display: flex;
+  width: 100%;
+  pointer-events: auto;
+  perspective: 1200px;
+}
+
+.ag-panel {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--ag-radius);
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  pointer-events: auto;
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  will-change: flex-grow, transform, filter;
+}
+
+.ag-panel__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.ag-panel__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.ag-panel__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, transparent 46%, color-mix(in srgb, var(--ag-overlay) 76%, transparent) 100%),
+    color-mix(in srgb, var(--ag-overlay) 18%, transparent);
+  pointer-events: none;
+  will-change: opacity;
+}
+
+.ag-panel.is-active .ag-panel__overlay {
+  background: transparent;
+}
+
+.ag-panel__label {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  left: 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--ag-text);
+  pointer-events: none;
+}
+
+.ag-panel__bar {
+  width: 2px;
+  height: 22px;
+  flex: 0 0 auto;
+  background: var(--ag-accent);
+  transform-origin: bottom;
+  will-change: transform;
+}
+
+.ag-panel__text {
+  font-size: 0.76rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  will-change: opacity, transform;
+}
+
+.ag-panel:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--ag-accent);
+}
+
+@media (max-width: 680px) {
+  .ag-panel__label {
+    right: 10px;
+    bottom: 12px;
+    left: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ag-panel,
+  .ag-panel__media,
+  .ag-panel__overlay,
+  .ag-panel__bar,
+  .ag-panel__text {
+    transition: none;
+  }
+}

@@ -1,67 +1,78 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Style from './Navbar.module.scss';
-import Toggler from "./home/Toggler";
-import { useLocation } from "react-router-dom";
-import { HashLink as Link } from 'react-router-hash-link';
+import { Link } from 'react-router-dom';
 import { Box } from "@mui/material";
-import { info } from "../info/Info";
-import { singlePage } from '../info/Info';
 
 const links = [
     {
-        name: 'Home',
+        name: '首页',
+        englishName: 'HOME',
         to: '',
         active: 'home'
     },
     {
-        name: 'About Me',
+        name: '作品',
+        englishName: 'WORKS',
+        to: 'portfolio',
+        active: 'portfolio'
+    },
+    {
+        name: '关于',
+        englishName: 'ABOUT',
         to: 'about',
         active: 'about'
     },
     {
-        name: info.initials,
-        type: 'initials',
-        to: '',
-        active: 'home'
-    },
-    {
-        name: 'Portfolio',
-        to: 'portfolio',
-        active: 'portfolio'
+        name: '联系',
+        englishName: 'CONTACT',
+        to: 'contact',
+        active: 'contact'
     }
 ]
 
-// This function is used to create a scroll offset to compensate for the navbar
-// when you click on the nav buttons to scroll down.
-const scrollWidthOffset = (el) => {
-    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
-    const yOffset = -80; 
-    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' }); 
-}
-
-
-export default function Navbar({ darkMode, handleClick, active, setActive }) {
+export default function Navbar({active, setActive}) {
 
     return (
-        <Box component={'nav'} width={'100%'} position={singlePage ? 'fixed' : 'relative'} className={darkMode? Style.dark : Style.light}>
-            <Box component={'ul'} display={'flex'} justifyContent={'center'} alignItems={'center'}
-                gap={{ xs: '2rem', md: '8rem' }}
-                textTransform={'lowercase'} fontSize={'1rem'}>
+        <Box component={'nav'} className={Style.navbar} aria-label={'Primary navigation'}>
+            <Box component={'ul'} className={Style.navGroup}>
                 {links.map((link, index) => (
-                    <Box key={index} component={'li'} className={(link.active === active && !link.type) && Style.active}
-                        sx={{ borderImageSource: info.gradient }}>
-                        <Link to={singlePage ? `#${link.to}` : `/${link.to}`}
-                        scroll={el => scrollWidthOffset(el)}
-                            smooth
-                            onClick={() => setActive(link.active)} className={Style.link}>
-                            {!link.type && <p style={{ padding: '0.5rem 0' }}>{link.name}</p>}
-                            {link.type && <h1>{link.name}</h1>}
-                        </Link>
+                    <Box
+                        key={index}
+                        component={'li'}
+                        className={`${Style.navItem} ${(link.active === active) ? Style.active : ''}`}
+                    >
+                        {link.to !== undefined ? (
+                            <Link to={`/${link.to}`}
+                                onClick={() => setActive(link.active)} className={Style.link}>
+                                <span className={Style.navLabel}>
+                                    <span>{link.name}</span>
+                                    <span className={Style.englishLabel}>{link.englishName}</span>
+                                    <svg
+                                        className={Style.handDrawnLine}
+                                        viewBox="0 0 48 6"
+                                        preserveAspectRatio="none"
+                                        aria-hidden="true"
+                                    >
+                                        <path pathLength="1" d="M1 3.8 C8 2.2 14 4.1 21 3.1 C29 2 36 3.9 47 2.7" />
+                                    </svg>
+                                </span>
+                            </Link>
+                        ) : (
+                            <span className={Style.navLabel}>
+                                <span>{link.name}</span>
+                                <span className={Style.englishLabel}>{link.englishName}</span>
+                                <svg
+                                    className={Style.handDrawnLine}
+                                    viewBox="0 0 48 6"
+                                    preserveAspectRatio="none"
+                                    aria-hidden="true"
+                                >
+                                    <path pathLength="1" d="M1 3.8 C8 2.2 14 4.1 21 3.1 C29 2 36 3.9 47 2.7" />
+                                </svg>
+                            </span>
+                        )}
                     </Box>
                 ))}
-                <li>
-                    <Toggler darkMode={darkMode} handleClick={handleClick} />
-                </li>
             </Box>
         </Box>
     )

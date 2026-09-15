@@ -1,0 +1,525 @@
+.scene {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #1d0e08;
+}
+
+.stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1672 / 941;
+  transform: none;
+  overflow: hidden;
+}
+
+.sceneBackground {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 650ms ease;
+}
+
+.sceneBackgroundVisible {
+  opacity: 1;
+}
+
+.skylightEffects {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 46.3%;
+  width: 39.3%;
+  height: 19.7%;
+  overflow: hidden;
+  pointer-events: none;
+  clip-path: polygon(0 0, 86% 0, 100% 92%, 8% 100%);
+}
+
+.starLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 650ms ease;
+}
+
+.skyEffectVisible {
+  opacity: 1;
+}
+
+.star {
+  position: absolute;
+  top: var(--star-top);
+  left: var(--star-left);
+  width: var(--star-size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 244, 204, 0.9);
+  box-shadow: 0 0 0.2rem rgba(255, 221, 143, 0.6);
+  opacity: 0.12;
+  animation: starTwinkle var(--twinkle-duration) ease-in-out var(--twinkle-delay) infinite;
+  will-change: opacity;
+}
+
+@keyframes starTwinkle {
+  0%,
+  100% {
+    opacity: 0.12;
+  }
+
+  50% {
+    opacity: var(--star-opacity);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    animation: none;
+  }
+
+  .turntableTonearm {
+    transition: none;
+  }
+
+}
+
+.entry {
+  position: absolute;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transform-origin: center;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.entryImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  transition: filter 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.entryLabel {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.08rem;
+  padding: 0.28rem 0.5rem 0.3rem;
+  border-radius: 0.3rem;
+  background: rgba(248, 238, 216, 0.82);
+  box-shadow: 0 0.18rem 0.5rem rgba(68, 35, 17, 0.14);
+  color: #3c2618;
+  line-height: 1.1;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(2px);
+  transform: translate(var(--label-offset-x, -50%), 0.2rem);
+  transition: opacity 200ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.labelEnglish {
+  font-size: clamp(0.65rem, 0.78vw, 0.82rem);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.labelChinese {
+  font-size: clamp(0.55rem, 0.64vw, 0.7rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.entry:hover,
+.entry:focus-visible {
+  transform: translateY(-2.5%) scale(1.02);
+}
+
+.entry:hover .entryImage,
+.entry:focus-visible .entryImage {
+  filter: drop-shadow(0 0.35rem 0.45rem rgba(55, 26, 10, 0.2));
+}
+
+.entry:hover .entryLabel,
+.entry:focus-visible .entryLabel {
+  opacity: 1;
+  transform: translate(var(--label-offset-x, -50%), 0);
+}
+
+.entry:focus-visible {
+  outline: 1px solid rgba(248, 248, 248, 0.85);
+  outline-offset: 0.2rem;
+}
+
+.entry:active {
+  transform: translateY(1%) scale(0.985);
+  transition-duration: 100ms;
+}
+
+.turntable {
+  position: absolute;
+  display: block;
+  z-index: 2;
+  top: 27.95%;
+  left: 4.49%;
+  width: 10.83%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: pointer;
+  }
+
+  &:hover .turntableHint,
+  &:focus-visible .turntableHint {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.turntableHint {
+  position: absolute;
+  left: calc(50% + 12px);
+  bottom: calc(100% + 10px);
+  color: rgba(247, 241, 230, 0.82);
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  text-shadow: 0 1px 3px rgba(35, 25, 18, 0.35);
+  transform: translateX(-50%) translateY(3px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.turntableBase {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.vinylPosition {
+  position: absolute;
+  z-index: 2;
+  top: 25.7%;
+  left: 21.6%;
+  width: 58.2%;
+  transform: scaleY(0.75);
+  transform-origin: center;
+  pointer-events: none;
+}
+
+.vinylSpin {
+  width: 100%;
+}
+
+.turntableVinyl {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.turntableTonearm {
+  position: absolute;
+  z-index: 3;
+  top: 29%;
+  left: 37.7%;
+  width: 54.5%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+  transform-origin: 88% 20%;
+  transition: transform 420ms ease-in-out;
+}
+
+.tonearmPlaying {
+  transform: rotate(4.2deg);
+}
+
+.tonearmIdle {
+  transform: rotate(17deg);
+}
+
+.books {
+  position: absolute;
+  display: block;
+  z-index: 3;
+  top: 45.59%;
+  left: 20.39%;
+  width: 18.90%;
+  aspect-ratio: 316 / 313;
+
+  .entryLabel {
+    top: 29%;
+    left: 18%;
+  }
+}
+
+.booksImage {
+  pointer-events: none;
+  transition:
+    transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.booksHitArea {
+  position: absolute;
+  z-index: 3;
+  top: 36%;
+  left: 4%;
+  width: 87%;
+  height: 59%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.booksHitArea:hover ~ .booksImage,
+.booksHitArea:focus-visible ~ .booksImage {
+  transform: translateY(-2.5%) scale(1.02);
+  filter: drop-shadow(0 0.35rem 0.45rem rgba(55, 26, 10, 0.2));
+}
+
+.booksHitArea:hover ~ .entryLabel,
+.booksHitArea:focus-visible ~ .entryLabel {
+  opacity: 1;
+  transform: translate(var(--label-offset-x, -50%), 0);
+}
+
+.booksHitArea:focus-visible {
+  outline: 1px solid rgba(248, 248, 248, 0.85);
+  outline-offset: 0.2rem;
+}
+
+.lamp {
+  position: absolute;
+  z-index: 4;
+  top: 21.04%;
+  left: 31.10%;
+  width: 23.74%;
+}
+
+.lampWrapper {
+  pointer-events: none;
+}
+
+.lampImage {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.lampSwitch {
+  position: absolute;
+  z-index: 2;
+  top: 80.7%;
+  left: 25.8%;
+  width: 8.8%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+  transform-origin: center;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), filter 220ms ease;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &:hover,
+  &:focus-visible {
+    filter: brightness(1.025);
+    transform: scale(1.04);
+  }
+
+  &:focus-visible {
+    outline: 1px solid rgba(248, 238, 216, 0.72);
+    outline-offset: 0.08rem;
+  }
+
+  &:active {
+    transform: translateY(1px) scale(0.97);
+    transition-duration: 120ms;
+  }
+}
+
+.computer {
+  z-index: 3;
+  top: 37.51%;
+  left: 44.62%;
+  width: 20.5105%;
+
+  .entryLabel {
+    --label-offset-x: -10%;
+    top: 8%;
+    left: 100%;
+  }
+}
+
+.notebook {
+  z-index: 5;
+  top: 60.15%;
+  left: 45.28%;
+  width: 10.963%;
+
+  .entryLabel {
+    --label-offset-x: -10%;
+    top: 78%;
+    left: 100%;
+  }
+}
+
+.camera {
+  z-index: 4;
+  top: 43.78%;
+  left: 70.8%;
+  width: 11.2%;
+
+  .entryLabel {
+    top: 100%;
+    left: 52%;
+  }
+}
+
+.aboutFolder {
+  position: absolute;
+  z-index: 4;
+  top: 37.1%;
+  left: 84.7%;
+  width: 11.0%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transform: rotate(0deg);
+  transform-origin: bottom center;
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  &:hover,
+  &:focus-visible {
+    .aboutFolderMotion {
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    .aboutFolderHint {
+      opacity: 1;
+      transform: translateY(calc(-50% - 2px));
+    }
+  }
+
+  &:focus-visible {
+    outline: 1px solid rgba(248, 238, 216, 0.72);
+    outline-offset: 0.12rem;
+  }
+}
+
+.aboutFolderHint {
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 6px);
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 200ms ease, transform 200ms ease;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.aboutFolderMotion {
+  display: block;
+  width: 100%;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transform-origin: bottom center;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.aboutFolderPressed .aboutFolderMotion,
+.aboutFolderPressed:hover .aboutFolderMotion,
+.aboutFolderPressed:focus-visible .aboutFolderMotion,
+.aboutFolderPressed:active .aboutFolderMotion {
+  animation: aboutFolderPress 130ms ease-out both;
+}
+
+@keyframes aboutFolderPress {
+  0% { transform: translateY(-3px) scale(1.03); }
+  48% { transform: translateY(-3px) scale(0.97); }
+  100% { transform: translateY(-3px) scale(1.03); }
+}
+
+@media only screen and (max-width: 700px) {
+  .stage {
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .turntable::before,
+  .lampSwitch::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+
+}

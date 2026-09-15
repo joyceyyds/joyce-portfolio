@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Joyce Portfolio</title>
+    <script>
+      (function (location) {
+        var repoBaseSegments = 1;
+        var basePath = location.pathname
+          .split('/')
+          .slice(0, repoBaseSegments + 1)
+          .join('/');
+        var routePath = location.pathname
+          .slice(basePath.length)
+          .replace(/^\//, '');
+        var query = location.search
+          ? '&' + location.search.slice(1).replace(/&/g, '~and~')
+          : '';
+
+        location.replace(
+          location.origin + basePath + '/?/' + routePath + query + location.hash
+        );
+      }(window.location));
+    </script>
+  </head>
+  <body></body>
+</html>
