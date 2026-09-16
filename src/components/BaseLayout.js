@@ -20,6 +20,7 @@ export default function BaseLayout() {
    const loaderPaintTimer = useRef(null);
    const loaderRemovalTimer = useRef(null);
    const coffeeAudioRef = useRef(null);
+   const loaderReadyHandledRef = useRef(false);
    useEffect(() => {
       let detectedDarkMode = JSON.parse(localStorage.getItem('darkMode'));
 
@@ -50,12 +51,20 @@ export default function BaseLayout() {
       }
 
       const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      isStudioTransitioning.current = true;
+      loaderReadyHandledRef.current = false;
+      setStudioLoader({visible: true, reducedMotion, isExiting: false});
+   }
+
+   function handleStudioLoaderReady() {
+      if (loaderReadyHandledRef.current) return;
+      loaderReadyHandledRef.current = true;
+
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const displayDuration = reducedMotion ? 650 : 2300;
       const paintDelay = reducedMotion ? 0 : 75;
       const fadeDuration = reducedMotion ? 100 : 300;
-
-      isStudioTransitioning.current = true;
-      setStudioLoader({visible: true, reducedMotion, isExiting: false});
 
       const coffeeAudio = coffeeAudioRef.current;
       if (coffeeAudio) {
@@ -104,6 +113,7 @@ export default function BaseLayout() {
             <StudioLoader
                reducedMotion={studioLoader.reducedMotion}
                isExiting={studioLoader.isExiting}
+               onReady={handleStudioLoaderReady}
             />
          )}
          <audio ref={coffeeAudioRef} src={coffeeMachineSound} preload="auto" />

@@ -16,8 +16,19 @@
   height: 100dvh;
   overflow: hidden;
   background: #000000;
-  opacity: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlayReady {
+  pointer-events: auto;
   animation: overlayLifecycle 2300ms ease both;
+}
+
+.overlay:not(.overlayReady) .coffeeMessage,
+.overlay:not(.overlayReady) .coffeeFlow,
+.overlay:not(.overlayReady) .smoke {
+  animation-play-state: paused;
 }
 
 .sceneFrame {
@@ -149,8 +160,6 @@
 }
 
 .reducedMotion {
-  animation: reducedOverlayLifecycle 650ms ease both;
-
   .coffeeMessage {
     opacity: 0.84;
     animation: none;
@@ -164,6 +173,10 @@
   .coffeeFlow {
     display: none;
   }
+}
+
+.reducedMotion.overlayReady {
+  animation: reducedOverlayLifecycle 650ms ease both;
 }
 
 .overlayExiting {
@@ -268,7 +281,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .overlay {
+  .overlayReady {
     animation: reducedOverlayLifecycle 650ms ease both;
   }
 

@@ -13,8 +13,9 @@ import contactMailbox from '../../assets/about/contact-mailbox.png';
 import aboutLamp from '../../assets/about/about-lamp.png';
 import aboutSwitchLamp from '../../assets/about/about-switch-lamp.png';
 import aboutLightOverlay from '../../assets/about/about-light-overlay.png';
+import contactBackground from '../../assets/contact/contact-background-new.webp';
 import pullSwitchSound from '../../assets/sounds/pull-switch.mp3';
-import {preloadVisualModule, preloadVisualModuleWithTimeout} from '../../utils/preloadImages';
+import {preloadImagesWithTimeout, preloadVisualModule, preloadVisualModuleWithTimeout} from '../../utils/preloadImages';
 
 const INITIAL_POSITIONS = {
     photo: {top: 14, left: -4.5},
@@ -55,6 +56,7 @@ export default function About({innerRef}) {
     const switchAudioRef = useRef(null);
     const contactMailboxPressTimerRef = useRef(null);
     const openFolderRequestRef = useRef(false);
+    const contactNavigationRef = useRef(false);
 
     useLayoutEffect(() => {
         const scaleFrame = scaleFrameRef.current;
@@ -170,18 +172,25 @@ export default function About({innerRef}) {
         }, 200);
     }
 
-    function handleContactMailboxClick() {
-        if (isContactMailboxPressed) return;
+    async function handleContactMailboxClick() {
+        if (contactNavigationRef.current) return;
+        contactNavigationRef.current = true;
 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            await preloadImagesWithTimeout([contactBackground], 1500);
             navigate('/contact');
             return;
         }
 
         setIsContactMailboxPressed(true);
-        contactMailboxPressTimerRef.current = window.setTimeout(() => {
-            navigate('/contact');
-        }, 130);
+        const pressAnimation = new Promise((resolve) => {
+            contactMailboxPressTimerRef.current = window.setTimeout(resolve, 130);
+        });
+        await Promise.all([
+            pressAnimation,
+            preloadImagesWithTimeout([contactBackground], 1500),
+        ]);
+        navigate('/contact');
     }
 
     useEffect(() => () => {

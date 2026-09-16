@@ -3,13 +3,23 @@
  * Source: https://uiverse.io/3bdel3ziz-T/strong-gecko-19
  * Licensed under the MIT License.
  */
-import React, {useLayoutEffect, useRef} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Style from './StudioLoader.module.scss';
 import coffeeMachine from '../../assets/transition/coffee-machine-optimized.png';
 import studioLoaderBackground from '../../assets/transition/studio-loader-background.webp';
+import {preloadImages} from '../../utils/preloadImages';
 
-export default function StudioLoader({reducedMotion = false, isExiting = false}) {
+const LOADER_CRITICAL_IMAGES = [studioLoaderBackground, coffeeMachine];
+
+export default function StudioLoader({reducedMotion = false, isExiting = false, onReady}) {
+   const [isReadyToShow, setIsReadyToShow] = useState(false);
    const scaleFrameRef = useRef(null);
+   const onReadyRef = useRef(onReady);
+   const hasReportedReadyRef = useRef(false);
+
+   useEffect(() => {
+      onReadyRef.current = onReady;
+   }, [onReady]);
 
    useLayoutEffect(() => {
       const scaleFrame = scaleFrameRef.current;
@@ -25,9 +35,38 @@ export default function StudioLoader({reducedMotion = false, isExiting = false})
       return () => resizeObserver.disconnect();
    }, []);
 
+   useEffect(() => {
+      let isMounted = true;
+      let firstPaintFrame;
+      let secondPaintFrame;
+      let visiblePaintFrame;
+
+      preloadImages(LOADER_CRITICAL_IMAGES).then(() => {
+         if (!isMounted) return;
+         firstPaintFrame = window.requestAnimationFrame(() => {
+            secondPaintFrame = window.requestAnimationFrame(() => {
+               if (!isMounted) return;
+               setIsReadyToShow(true);
+               visiblePaintFrame = window.requestAnimationFrame(() => {
+                  if (!isMounted || hasReportedReadyRef.current) return;
+                  hasReportedReadyRef.current = true;
+                  onReadyRef.current?.();
+               });
+            });
+         });
+      });
+
+      return () => {
+         isMounted = false;
+         if (firstPaintFrame) window.cancelAnimationFrame(firstPaintFrame);
+         if (secondPaintFrame) window.cancelAnimationFrame(secondPaintFrame);
+         if (visiblePaintFrame) window.cancelAnimationFrame(visiblePaintFrame);
+      };
+   }, []);
+
    return (
       <div
-         className={`${Style.overlay} ${reducedMotion ? Style.reducedMotion : ''} ${isExiting ? Style.overlayExiting : ''}`}
+         className={`${Style.overlay} ${isReadyToShow ? Style.overlayReady : ''} ${reducedMotion ? Style.reducedMotion : ''} ${isExiting ? Style.overlayExiting : ''}`}
          role={'status'}
          aria-live={'polite'}
          aria-label={'Making coffee before entering Joyce’s studio'}
