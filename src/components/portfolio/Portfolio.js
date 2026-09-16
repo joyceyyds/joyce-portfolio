@@ -370,7 +370,7 @@ export default function Portfolio({innerRef}) {
                     <img
                         className={Style.photoExpanded}
                         src={photoFrameOpen}
-                        alt={'Expanded framed photo'}
+                        alt={'Joyce in a red hat outdoors'}
                         onClick={(event) => event.stopPropagation()}
                     />
                 </div>
