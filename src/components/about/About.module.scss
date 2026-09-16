@@ -19,6 +19,19 @@
   transform: translate(-50%, -50%);
 }
 
+.aboutForeground {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.aboutScaleFrameReady .aboutForeground {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 .aboutCanvas {
   --about-open-width: 1103.52px;
   --about-folder-height: calc(var(--about-open-width) * 992 / 1535);

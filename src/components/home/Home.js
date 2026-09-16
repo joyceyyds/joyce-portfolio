@@ -168,6 +168,7 @@ export default function Home({innerRef, onEnterStudio}) {
             <div className={Style.homeCanvas}>
               <div className={`${Style.homeStage} ${isHomeExiting ? Style.homeStageExiting : ''}`}>
                <img className={Style.background} src={homeBackground} alt={''} aria-hidden={'true'} />
+               <div className={Style.homeForeground}>
                <button
                   type={'button'}
                   className={Style.treeLayer}
@@ -253,6 +254,7 @@ export default function Home({innerRef, onEnterStudio}) {
                   <p className={Style.metadata}>03｜27届｜INFP｜网络与新媒体专业</p>
                   <p className={Style.disciplines}>Product × AI × Content × Film</p>
                   <p className={Style.introduction}>把想法变成可以被看见、使用和体验的东西。</p>
+               </div>
                </div>
               </div>
             </div>

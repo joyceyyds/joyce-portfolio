@@ -12,6 +12,7 @@ import dandelion02 from '../../assets/contact/dandelion-02.png';
 import dandelion03 from '../../assets/contact/dandelion-03.png';
 import dandelion04 from '../../assets/contact/dandelion-04.png';
 import dandelion05 from '../../assets/contact/dandelion-05.png';
+import {preloadVisualModuleWithTimeout} from '../../utils/preloadImages';
 
 const DANDELIONS = [
     {asset: dandelion01, width: 0.78, opacity: 0.48, duration: 13.5, delay: 0.4, x: [-6, 12, 31, 58, 106], y: [76, 66, 69, 52, 36], rotate: [-14, 28, 10, 38, 55]},
@@ -41,6 +42,7 @@ const LETTER_RISE_DURATION = 1000;
 
 export default function Contact() {
     const [mailState, setMailState] = useState('idle');
+    const [isSceneReady, setIsSceneReady] = useState(false);
     const scaleFrameRef = useRef(null);
 
     useLayoutEffect(() => {
@@ -55,6 +57,16 @@ export default function Contact() {
         const resizeObserver = new ResizeObserver(updateScale);
         resizeObserver.observe(scaleFrame);
         return () => resizeObserver.disconnect();
+    }, []);
+
+    useEffect(() => {
+        let isMounted = true;
+        preloadVisualModuleWithTimeout('contact', 1500).then(() => {
+            if (isMounted) setIsSceneReady(true);
+        });
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     useEffect(() => {
@@ -125,9 +137,10 @@ export default function Contact() {
 
     return (
         <main className={Style.contactScene} onClick={handleSceneClick}>
-          <div ref={scaleFrameRef} className={Style.contactScaleFrame}>
+          <div ref={scaleFrameRef} className={`${Style.contactScaleFrame} ${isSceneReady ? Style.contactScaleFrameReady : ''}`}>
             <div className={Style.contactStage} aria-label="Contact mailbox scene" onClick={handleSceneClick}>
                 <img className={Style.contactBackground} src={contactBackground} alt="" />
+            <div className={Style.contactForeground} onClick={handleSceneClick}>
                 <div className={Style.dandelionLayer} aria-hidden="true">
                     {DANDELIONS.map((dandelion, index) => (
                         <img
@@ -219,6 +232,7 @@ export default function Contact() {
                 >
                     <img src={contactMailboxMain} alt="Contact mailbox" draggable="false" />
                 </button>
+                </div>
             </div>
           </div>
         </main>

@@ -17,12 +17,19 @@
   aspect-ratio: 1672 / 941;
   transform: translate(-50%, -50%);
   overflow: hidden;
+}
+
+.stageForeground {
+  position: absolute;
+  inset: 0;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 180ms ease;
 }
 
-.stageFrameReady {
+.stageFrameReady .stageForeground {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .stage {

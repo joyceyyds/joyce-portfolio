@@ -7,7 +7,6 @@ import ContentBooks from './ContentBooks';
 import FilmOverlay from './film/FilmOverlay';
 import AIOverlay from './ai/AIOverlay';
 import {
-    WORKS_SCENE_IMAGES,
     worksDay,
     worksNight,
     contentBooks,
@@ -23,7 +22,12 @@ import {
 } from './worksSceneAssets';
 import sunflowerMusic from '../../assets/sounds/Sunflower.mp3';
 import deskLampSwitchSound from '../../assets/sounds/desk-lamp-switch.mp3';
-import {preloadImagesWithTimeout} from '../../utils/preloadImages';
+import {
+    preloadModulesInIdle,
+    preloadVisualModuleWithTimeout,
+    wait,
+} from '../../utils/preloadImages';
+import {IDLE_PRELOAD_ORDER} from '../../utils/visualAssetManifest';
 
 const STAR_POINTS = [
     {left: '12%', top: '24%', size: '0.34%', duration: '1.8s', delay: '-1.1s', opacity: 0.94},
@@ -57,7 +61,7 @@ export default function Portfolio({innerRef}) {
     const musicAudioRef = useRef(null);
     const turntablePlayTimerRef = useRef(null);
     const turntableUnlockTimerRef = useRef(null);
-    const aboutFolderPressTimerRef = useRef(null);
+    const pendingModuleRef = useRef(new Set());
     const scaleFrameRef = useRef(null);
 
     useLayoutEffect(() => {
@@ -77,6 +81,15 @@ export default function Portfolio({innerRef}) {
     function closeAI() {
         setIsAIOpen(false);
         setSelectedAIProject(null);
+    }
+
+    function openModule(moduleName, open) {
+        if (pendingModuleRef.current.has(moduleName)) return;
+        pendingModuleRef.current.add(moduleName);
+        preloadVisualModuleWithTimeout(moduleName, 1500).then(() => {
+            pendingModuleRef.current.delete(moduleName);
+            open();
+        });
     }
 
     function handleLampClick() {
@@ -128,18 +141,21 @@ export default function Portfolio({innerRef}) {
         }, lockDelay);
     }
 
-    function handleAboutFolderClick() {
+    async function handleAboutFolderClick() {
         if (isAboutFolderPressed) return;
 
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            await preloadVisualModuleWithTimeout('aboutScene', 1500);
             navigate('/about');
             return;
         }
 
         setIsAboutFolderPressed(true);
-        aboutFolderPressTimerRef.current = window.setTimeout(() => {
-            navigate('/about');
-        }, 130);
+        await Promise.all([
+            preloadVisualModuleWithTimeout('aboutScene', 1500),
+            wait(130),
+        ]);
+        navigate('/about');
     }
 
     useEffect(() => () => {
@@ -150,20 +166,22 @@ export default function Portfolio({innerRef}) {
         if (turntableUnlockTimerRef.current) {
             window.clearTimeout(turntableUnlockTimerRef.current);
         }
-        if (aboutFolderPressTimerRef.current) {
-            window.clearTimeout(aboutFolderPressTimerRef.current);
-        }
     }, []);
 
     useEffect(() => {
         let isMounted = true;
-        preloadImagesWithTimeout(WORKS_SCENE_IMAGES, 4500).then(() => {
+        preloadVisualModuleWithTimeout('works', 4500).then(() => {
             if (isMounted) setIsSceneReady(true);
         });
         return () => {
             isMounted = false;
         };
     }, []);
+
+    useEffect(() => {
+        if (!isSceneReady) return;
+        preloadModulesInIdle(IDLE_PRELOAD_ORDER);
+    }, [isSceneReady]);
 
     return (
         <Box
@@ -184,6 +202,7 @@ export default function Portfolio({innerRef}) {
                     style={{backgroundImage: `url(${worksNight})`}}
                     aria-hidden={'true'}
                 />
+                <div className={Style.stageForeground}>
                 <div className={Style.skylightEffects} aria-hidden={'true'}>
                     <div className={`${Style.starLayer} ${isLampOn ? Style.skyEffectVisible : ''}`}>
                         {STAR_POINTS.map((star, index) => (
@@ -230,7 +249,7 @@ export default function Portfolio({innerRef}) {
                         type={'button'}
                         className={Style.booksHitArea}
                         aria-label={'内容 / CONTENT'}
-                        onClick={() => setIsContentOpen(true)}
+                        onClick={() => openModule('content', () => setIsContentOpen(true))}
                     />
                     <img className={`${Style.entryImage} ${Style.booksImage}`} src={contentBooks} alt={''} />
                     <span className={Style.entryLabel}>
@@ -254,7 +273,7 @@ export default function Portfolio({innerRef}) {
                     type={'button'}
                     className={`${Style.entry} ${Style.computer}`}
                     aria-label={'人工智能 / AI'}
-                    onClick={() => setIsAIOpen(true)}
+                    onClick={() => openModule('ai', () => setIsAIOpen(true))}
                 >
                     <img className={Style.entryImage} src={aiComputer} alt={''} />
                     <span className={Style.entryLabel}>
@@ -262,14 +281,14 @@ export default function Portfolio({innerRef}) {
                         <span className={Style.labelChinese}>人工智能</span>
                     </span>
                 </button>
-                <button type={'button'} className={`${Style.entry} ${Style.notebook}`} aria-label={'产品 / PRODUCT'} onClick={() => setIsProductOpen(true)}>
+                <button type={'button'} className={`${Style.entry} ${Style.notebook}`} aria-label={'产品 / PRODUCT'} onClick={() => openModule('product', () => setIsProductOpen(true))}>
                     <img className={Style.entryImage} src={productNotebook} alt={''} />
                     <span className={Style.entryLabel}>
                         <span className={Style.labelEnglish}>PRODUCT</span>
                         <span className={Style.labelChinese}>产品</span>
                     </span>
                 </button>
-                <button type={'button'} className={`${Style.entry} ${Style.camera}`} aria-label={'影像 / FILM'} onClick={() => setIsFilmOpen(true)}>
+                <button type={'button'} className={`${Style.entry} ${Style.camera}`} aria-label={'影像 / FILM'} onClick={() => openModule('film', () => setIsFilmOpen(true))}>
                     <img className={Style.entryImage} src={filmCamera} alt={''} />
                     <span className={Style.entryLabel}>
                         <span className={Style.labelEnglish}>FILM</span>
@@ -290,6 +309,7 @@ export default function Portfolio({innerRef}) {
                         ABOUT ↗
                     </span>
                 </button>
+                </div>
               </Box>
             </Box>
             <audio ref={musicAudioRef} preload="none" loop />

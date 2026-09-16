@@ -6,8 +6,7 @@ import { Box, Grid } from "@mui/material";
 import MultiPageRoutes from './MultiPageRoutes';
 import StudioLoader from './transition/StudioLoader';
 import coffeeMachineSound from '../assets/sounds/coffee-machine.mp3';
-import {WORKS_SCENE_IMAGES} from './portfolio/worksSceneAssets';
-import {preloadImages, wait} from '../utils/preloadImages';
+import {preloadVisualModule, wait} from '../utils/preloadImages';
 
 export default function BaseLayout() {
    const location = useLocation()
@@ -65,7 +64,7 @@ export default function BaseLayout() {
          coffeeAudio.play().catch(() => {});
       }
 
-      const worksPreload = preloadImages(WORKS_SCENE_IMAGES);
+      const worksPreload = preloadVisualModule('works');
       const minimumDisplay = wait(displayDuration);
       const maximumWait = wait(4500);
 

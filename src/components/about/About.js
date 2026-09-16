@@ -14,6 +14,7 @@ import aboutLamp from '../../assets/about/about-lamp.png';
 import aboutSwitchLamp from '../../assets/about/about-switch-lamp.png';
 import aboutLightOverlay from '../../assets/about/about-light-overlay.png';
 import pullSwitchSound from '../../assets/sounds/pull-switch.mp3';
+import {preloadVisualModule, preloadVisualModuleWithTimeout} from '../../utils/preloadImages';
 
 const INITIAL_POSITIONS = {
     photo: {top: 14, left: -4.5},
@@ -45,6 +46,7 @@ export default function About({innerRef}) {
     const [isLightOn, setIsLightOn] = useState(true);
     const [isSwitchAnimating, setIsSwitchAnimating] = useState(false);
     const [isContactMailboxPressed, setIsContactMailboxPressed] = useState(false);
+    const [isSceneReady, setIsSceneReady] = useState(false);
     const stageRef = useRef(null);
     const scaleFrameRef = useRef(null);
     const pointerActionRef = useRef(null);
@@ -52,6 +54,7 @@ export default function About({innerRef}) {
     const nextStackOrderRef = useRef(40);
     const switchAudioRef = useRef(null);
     const contactMailboxPressTimerRef = useRef(null);
+    const openFolderRequestRef = useRef(false);
 
     useLayoutEffect(() => {
         const scaleFrame = scaleFrameRef.current;
@@ -68,7 +71,27 @@ export default function About({innerRef}) {
         return () => resizeObserver.disconnect();
     }, []);
 
-    function handleOpenAbout() {
+    useEffect(() => {
+        let isMounted = true;
+        preloadVisualModuleWithTimeout('aboutScene', 1500).then(() => {
+            if (isMounted) setIsSceneReady(true);
+        });
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!isSceneReady) return;
+        preloadVisualModule('aboutOpenFolder');
+    }, [isSceneReady]);
+
+    async function handleOpenAbout() {
+        if (aboutState !== 'closed' || openFolderRequestRef.current) return;
+        openFolderRequestRef.current = true;
+
+        await preloadVisualModuleWithTimeout('aboutOpenFolder', 1500);
+
         // Future sequence: closed -> opening video -> open.
         setAboutState('open');
     }
@@ -188,8 +211,9 @@ export default function About({innerRef}) {
             id="about"
         >
             <audio ref={switchAudioRef} src={pullSwitchSound} preload="auto" />
-            <div ref={scaleFrameRef} className={Style.aboutScaleFrame}>
+            <div ref={scaleFrameRef} className={`${Style.aboutScaleFrame} ${isSceneReady ? Style.aboutScaleFrameReady : ''}`}>
               <div className={Style.aboutCanvas}>
+                <div className={Style.aboutForeground}>
                 <div className={Style.aboutEnvironment}>
                     <div className={Style.aboutEnvironmentStage}>
                         <img className={Style.aboutLightOverlay} src={aboutLightOverlay} alt="" />
@@ -271,6 +295,7 @@ export default function About({innerRef}) {
                         </div>
                     </div>
                 )}
+                </div>
               </div>
             </div>
 
