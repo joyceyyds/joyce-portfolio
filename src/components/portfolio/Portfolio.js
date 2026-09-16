@@ -19,6 +19,10 @@ import {
     turntableBase,
     turntableVinyl,
     turntableTonearm,
+    photoFrame,
+    photoFrameOpen,
+    waffle,
+    icedCoffee,
 } from './worksSceneAssets';
 import sunflowerMusic from '../../assets/sounds/Sunflower.mp3';
 import deskLampSwitchSound from '../../assets/sounds/desk-lamp-switch.mp3';
@@ -44,6 +48,12 @@ const STAR_POINTS = [
     {left: '91%', top: '36%', size: '0.3%', duration: '2.6s', delay: '-1.5s', opacity: 0.88},
 ];
 
+const SCENE_PROPS = [
+    {name: 'photo-frame', source: photoFrame, left: 21.59, top: 29, width: 7.3},
+    {name: 'waffle', source: waffle, left: 61.96, top: 60.32, width: 8},
+    {name: 'iced-coffee', source: icedCoffee, left: 68.02, top: 57.39, width: 6.6},
+];
+
 export default function Portfolio({innerRef}) {
     const navigate = useNavigate();
     const [isProductOpen, setIsProductOpen] = useState(false);
@@ -56,6 +66,7 @@ export default function Portfolio({innerRef}) {
     const [isTurntableLocked, setIsTurntableLocked] = useState(false);
     const [isLampOn, setIsLampOn] = useState(false);
     const [isAboutFolderPressed, setIsAboutFolderPressed] = useState(false);
+    const [isPhotoFrameOpen, setIsPhotoFrameOpen] = useState(false);
     const [isSceneReady, setIsSceneReady] = useState(false);
     const lampAudioRef = useRef(null);
     const musicAudioRef = useRef(null);
@@ -169,6 +180,16 @@ export default function Portfolio({innerRef}) {
     }, []);
 
     useEffect(() => {
+        if (!isPhotoFrameOpen) return undefined;
+
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') setIsPhotoFrameOpen(false);
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [isPhotoFrameOpen]);
+
+    useEffect(() => {
         let isMounted = true;
         preloadVisualModuleWithTimeout('works', 4500).then(() => {
             if (isMounted) setIsSceneReady(true);
@@ -203,6 +224,34 @@ export default function Portfolio({innerRef}) {
                     aria-hidden={'true'}
                 />
                 <div className={Style.stageForeground}>
+                {SCENE_PROPS.map(({name, source, left, top, width}) => {
+                    const style = {left: `${left}%`, top: `${top}%`, width: `${width}%`};
+                    if (name === 'photo-frame') {
+                        return (
+                            <button
+                                key={name}
+                                type={'button'}
+                                className={`${Style.sceneProp} ${Style.photoFrameTrigger}`}
+                                style={style}
+                                aria-label={'Open photo'}
+                                onClick={() => openModule('photoFrameOpen', () => setIsPhotoFrameOpen(true))}
+                            >
+                                <img className={Style.scenePropImage} src={source} alt={''} draggable={false} />
+                            </button>
+                        );
+                    }
+                    return (
+                        <img
+                            key={name}
+                            className={Style.sceneProp}
+                            src={source}
+                            alt={''}
+                            aria-hidden={'true'}
+                            draggable={false}
+                            style={style}
+                        />
+                    );
+                })}
                 <div className={Style.skylightEffects} aria-hidden={'true'}>
                     <div className={`${Style.starLayer} ${isLampOn ? Style.skyEffectVisible : ''}`}>
                         {STAR_POINTS.map((star, index) => (
@@ -312,6 +361,20 @@ export default function Portfolio({innerRef}) {
                 </div>
               </Box>
             </Box>
+            {isPhotoFrameOpen && (
+                <div
+                    className={Style.photoOverlay}
+                    role={'presentation'}
+                    onClick={() => setIsPhotoFrameOpen(false)}
+                >
+                    <img
+                        className={Style.photoExpanded}
+                        src={photoFrameOpen}
+                        alt={'Expanded framed photo'}
+                        onClick={(event) => event.stopPropagation()}
+                    />
+                </div>
+            )}
             <audio ref={musicAudioRef} preload="none" loop />
             <audio ref={lampAudioRef} src={deskLampSwitchSound} preload="auto" />
             <ProductNotebook isOpen={isProductOpen} onClose={() => setIsProductOpen(false)} />

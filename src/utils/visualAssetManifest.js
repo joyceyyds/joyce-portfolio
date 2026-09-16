@@ -1,4 +1,4 @@
-import {WORKS_SCENE_IMAGES} from '../components/portfolio/worksSceneAssets';
+import {photoFrameOpen, WORKS_SCENE_IMAGES} from '../components/portfolio/worksSceneAssets';
 
 import productNotebookOpen from '../assets/works/product/product-notebook-open.png';
 
@@ -46,6 +46,7 @@ import dandelion05 from '../assets/contact/dandelion-05.png';
 
 export const VISUAL_ASSET_MANIFEST = {
   works: WORKS_SCENE_IMAGES,
+  photoFrameOpen: [photoFrameOpen],
   product: [productNotebookOpen],
   content: [facai, joyceAi, liubai],
   ai: [aiVideo01, aiVideo02, aiVideo03, aiVideo04, aiVideo05],
@@ -83,4 +84,4 @@ export const VISUAL_ASSET_MANIFEST = {
   ],
 };
 
-export const IDLE_PRELOAD_ORDER = ['aboutScene', 'aboutOpenFolder', 'product', 'content', 'ai', 'film', 'contact'];
+export const IDLE_PRELOAD_ORDER = ['photoFrameOpen', 'aboutScene', 'aboutOpenFolder', 'product', 'content', 'ai', 'film', 'contact'];

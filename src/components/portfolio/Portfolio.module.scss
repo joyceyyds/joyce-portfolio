@@ -32,6 +32,70 @@
   pointer-events: auto;
 }
 
+.sceneProp {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  height: auto;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.photoFrameTrigger {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.scenePropImage {
+  display: block;
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.photoOverlay {
+  position: fixed;
+  z-index: 19;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.24);
+  animation: photoOverlayAppear 220ms ease both;
+}
+
+.photoExpanded {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(45.5vw, 624px);
+  max-height: 48.75vh;
+  object-fit: contain;
+  animation: photoExpand 260ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes photoOverlayAppear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes photoExpand {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .stage {
   position: absolute;
   top: 0;

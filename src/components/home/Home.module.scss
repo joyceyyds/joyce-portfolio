@@ -1,3 +1,5 @@
+@import url('https://api.fontshare.com/v2/css?f[]=neco@400&display=swap');
+
 .homeScene {
   position: relative;
   width: 100%;
@@ -258,6 +260,7 @@
   outline: none;
   animation: houseHintBreath 3.3s ease-in-out infinite;
   transition: opacity 200ms ease;
+  font-family: 'Neco', 'Roboto', Helvetica, sans-serif;
 }
 
 .houseLayer:hover .houseImage,
@@ -460,6 +463,7 @@
   width: 496px;
   color: #263944;
   text-align: left;
+  font-family: 'Neco', 'Roboto', Helvetica, sans-serif;
 }
 
 .heroExiting {

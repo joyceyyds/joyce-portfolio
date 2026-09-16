@@ -5,9 +5,13 @@ import OrientationHint from "./components/OrientationHint";
 import {BrowserRouter} from "react-router-dom";
 
 function App() {
+   const routerBasename = process.env.NODE_ENV === 'production'
+      ? process.env.PUBLIC_URL
+      : '/';
+
    return (
       <div>
-         <BrowserRouter basename={process.env.PUBLIC_URL}>
+         <BrowserRouter basename={routerBasename}>
             <BaseLayout/>
          </BrowserRouter>
          <OrientationHint/>
