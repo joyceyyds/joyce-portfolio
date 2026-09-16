@@ -5,17 +5,35 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: #1d0e08;
+  background: #000000;
+}
+
+.stageFrame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100vw, calc(100vh * 1672 / 941));
+  width: min(100vw, calc(100dvh * 1672 / 941));
+  aspect-ratio: 1672 / 941;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.stageFrameReady {
+  opacity: 1;
 }
 
 .stage {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  aspect-ratio: 1672 / 941;
-  transform: none;
+  width: 1672px;
+  height: 941px;
   overflow: hidden;
+  transform: scale(var(--works-canvas-scale, 1));
+  transform-origin: top left;
 }
 
 .sceneBackground {
@@ -139,13 +157,13 @@
 }
 
 .labelEnglish {
-  font-size: clamp(0.65rem, 0.78vw, 0.82rem);
+  font-size: 13.04px;
   font-weight: 500;
   letter-spacing: 0.08em;
 }
 
 .labelChinese {
-  font-size: clamp(0.55rem, 0.64vw, 0.7rem);
+  font-size: 10.7px;
   font-weight: 400;
   letter-spacing: 0.04em;
 }
@@ -503,15 +521,6 @@
   0% { transform: translateY(-3px) scale(1.03); }
   48% { transform: translateY(-3px) scale(0.97); }
   100% { transform: translateY(-3px) scale(1.03); }
-}
-
-@media only screen and (max-width: 700px) {
-  .stage {
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    transform: translate(-50%, -50%);
-  }
 }
 
 @media only screen and (max-width: 700px) {

@@ -4,16 +4,44 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: #59643f;
+  background: #000000;
+}
+
+.homeScaleFrame {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: min(100%, calc(100vh * 1672 / 941));
+  width: min(100%, calc(100dvh * 1672 / 941));
+  aspect-ratio: 1672 / 941;
+  overflow: hidden;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.homeScaleFrameReady {
+  opacity: 1;
+}
+
+.homeCanvas {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 1672px;
+  height: 941px;
+  overflow: hidden;
+  pointer-events: none;
+  transform: scale(var(--home-canvas-scale, 1));
+  transform-origin: top left;
 }
 
 .homeStage {
   position: absolute;
-  z-index: 0;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
-  aspect-ratio: 1672 / 941;
+  height: 100%;
   transform: none;
   pointer-events: none;
 }
@@ -29,7 +57,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
   user-select: none;
   pointer-events: none;
@@ -210,7 +238,7 @@
   top: 67.5%;
   left: 70.5%;
   display: block;
-  padding: 0.35rem 0.45rem;
+  padding: 5.6px 7.2px;
   color: rgba(38, 57, 68, 0.82);
   font-size: 14px;
   font-weight: 400;
@@ -423,7 +451,7 @@
   z-index: 1;
   top: 24%;
   left: 52%;
-  width: min(40%, 31rem);
+  width: 496px;
   color: #263944;
   text-align: left;
 }
@@ -469,71 +497,34 @@
 }
 
 .heroTitle {
-  font-size: clamp(2.2rem, 4vw, 4.5rem);
+  font-size: 66.88px;
   font-weight: 500;
   line-height: 1.08;
   letter-spacing: 0.01em;
 }
 
 .metadata {
-  margin-top: clamp(0.65rem, 1vw, 0.9rem);
-  font-size: clamp(0.68rem, 0.82vw, 0.82rem);
+  margin-top: 14.38px;
+  font-size: 13.12px;
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: 0.09em;
 }
 
 .disciplines {
-  margin-top: clamp(1rem, 1.5vw, 1.35rem);
-  font-size: clamp(0.95rem, 1.35vw, 1.25rem);
+  margin-top: 21.57px;
+  font-size: 20px;
   font-weight: 400;
   line-height: 1.45;
   letter-spacing: 0.025em;
 }
 
 .introduction {
-  margin-top: clamp(0.5rem, 0.85vw, 0.8rem);
-  font-size: clamp(0.78rem, 1vw, 0.95rem);
+  margin-top: 12.79px;
+  font-size: 15.2px;
   font-weight: 400;
   line-height: 1.75;
   letter-spacing: 0.025em;
-}
-
-@media only screen and (max-width: 700px) {
-  .homeStage {
-    width: 100%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  .homeStageExiting {
-    animation-name: homeStageExitMobile;
-  }
-
-  .heroContent {
-    top: 10%;
-    left: 8%;
-    width: 84%;
-  }
-
-  .heroTitle {
-    font-size: clamp(3.5rem, 18vw, 5.5rem);
-  }
-}
-
-@keyframes homeStageExitMobile {
-  from {
-    opacity: 1;
-    filter: blur(0);
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  to {
-    opacity: 0.88;
-    filter: blur(1px);
-    transform: translate(-50%, -50%) scale(1.015);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

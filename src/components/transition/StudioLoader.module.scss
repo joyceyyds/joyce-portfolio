@@ -15,20 +15,31 @@
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background: #f5eddf;
+  background: #000000;
   opacity: 1;
   animation: overlayLifecycle 2300ms ease both;
 }
 
-.scene {
+.sceneFrame {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: max(100vw, calc(100vh * 1672 / 941));
-  width: max(100vw, calc(100dvh * 1672 / 941));
+  width: min(100vw, calc(100vh * 1672 / 941));
+  width: min(100vw, calc(100dvh * 1672 / 941));
   aspect-ratio: 1672 / 941;
   overflow: hidden;
   transform: translate(-50%, -50%);
+}
+
+.scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1672px;
+  height: 941px;
+  overflow: hidden;
+  transform: scale(var(--loader-canvas-scale, 1));
+  transform-origin: top left;
 }
 
 .background {
@@ -38,7 +49,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center center;
   pointer-events: none;
   user-select: none;
@@ -60,7 +71,7 @@
   width: 25%;
   margin: 0;
   color: #715446;
-  font-size: clamp(14px, 1.15vw, 17px);
+  font-size: 17px;
   font-weight: 400;
   line-height: 1.4;
   letter-spacing: 0.035em;

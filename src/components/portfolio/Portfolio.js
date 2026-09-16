@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {Box} from "@mui/material";
 import {useNavigate} from 'react-router-dom';
 import Style from './Portfolio.module.scss';
@@ -6,20 +6,24 @@ import ProductNotebook from './ProductNotebook';
 import ContentBooks from './ContentBooks';
 import FilmOverlay from './film/FilmOverlay';
 import AIOverlay from './ai/AIOverlay';
-import worksDay from '../../assets/works/works-day.webp';
-import worksNight from '../../assets/works/works-night.webp';
-import contentBooks from '../../assets/works/content-books.png';
-import productNotebook from '../../assets/works/product-notebook.png';
-import aiComputer from '../../assets/works/ai-computer.png';
-import filmCamera from '../../assets/works/film-camera.png';
-import aboutFolder from '../../assets/works/about-folder.png';
-import deskLamp from '../../assets/works/desk-lamp.png';
-import lampSwitch from '../../assets/works/lamp-switch.png';
-import turntableBase from '../../assets/works/turntable/turntable-base.png';
-import turntableVinyl from '../../assets/works/turntable/turntable-vinyl.png';
-import turntableTonearm from '../../assets/works/turntable/turntable-tonearm.png';
+import {
+    WORKS_SCENE_IMAGES,
+    worksDay,
+    worksNight,
+    contentBooks,
+    productNotebook,
+    aiComputer,
+    filmCamera,
+    aboutFolder,
+    deskLamp,
+    lampSwitch,
+    turntableBase,
+    turntableVinyl,
+    turntableTonearm,
+} from './worksSceneAssets';
 import sunflowerMusic from '../../assets/sounds/Sunflower.mp3';
 import deskLampSwitchSound from '../../assets/sounds/desk-lamp-switch.mp3';
+import {preloadImagesWithTimeout} from '../../utils/preloadImages';
 
 const STAR_POINTS = [
     {left: '12%', top: '24%', size: '0.34%', duration: '1.8s', delay: '-1.1s', opacity: 0.94},
@@ -48,11 +52,27 @@ export default function Portfolio({innerRef}) {
     const [isTurntableLocked, setIsTurntableLocked] = useState(false);
     const [isLampOn, setIsLampOn] = useState(false);
     const [isAboutFolderPressed, setIsAboutFolderPressed] = useState(false);
+    const [isSceneReady, setIsSceneReady] = useState(false);
     const lampAudioRef = useRef(null);
     const musicAudioRef = useRef(null);
     const turntablePlayTimerRef = useRef(null);
     const turntableUnlockTimerRef = useRef(null);
     const aboutFolderPressTimerRef = useRef(null);
+    const scaleFrameRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const scaleFrame = scaleFrameRef.current;
+        if (!scaleFrame) return undefined;
+
+        const updateScale = () => {
+            scaleFrame.style.setProperty('--works-canvas-scale', `${scaleFrame.clientWidth / 1672}`);
+        };
+
+        updateScale();
+        const resizeObserver = new ResizeObserver(updateScale);
+        resizeObserver.observe(scaleFrame);
+        return () => resizeObserver.disconnect();
+    }, []);
 
     function closeAI() {
         setIsAIOpen(false);
@@ -73,7 +93,13 @@ export default function Portfolio({innerRef}) {
         if (isTurntableLocked) return;
 
         const audio = musicAudioRef.current;
-        if (audio) audio.volume = 0.2;
+        if (audio) {
+            audio.volume = 0.2;
+            if (!audio.getAttribute('src')) {
+                audio.src = sunflowerMusic;
+                audio.load();
+            }
+        }
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         const playDelay = reducedMotion ? 0 : 420;
         const lockDelay = reducedMotion ? 50 : 450;
@@ -129,6 +155,16 @@ export default function Portfolio({innerRef}) {
         }
     }, []);
 
+    useEffect(() => {
+        let isMounted = true;
+        preloadImagesWithTimeout(WORKS_SCENE_IMAGES, 4500).then(() => {
+            if (isMounted) setIsSceneReady(true);
+        });
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
     return (
         <Box
             id={'portfolio'}
@@ -136,10 +172,8 @@ export default function Portfolio({innerRef}) {
             component={'main'}
             className={Style.scene}
         >
-            <Box
-                className={Style.stage}
-                aria-label={'WORKS desk scene'}
-            >
+            <Box ref={scaleFrameRef} className={`${Style.stageFrame} ${isSceneReady ? Style.stageFrameReady : ''}`}>
+              <Box className={Style.stage} aria-label={'WORKS desk scene'}>
                 <span
                     className={`${Style.sceneBackground} ${isLampOn ? '' : Style.sceneBackgroundVisible}`}
                     style={{backgroundImage: `url(${worksDay})`}}
@@ -256,8 +290,9 @@ export default function Portfolio({innerRef}) {
                         ABOUT ↗
                     </span>
                 </button>
+              </Box>
             </Box>
-            <audio ref={musicAudioRef} src={sunflowerMusic} preload={'metadata'} loop />
+            <audio ref={musicAudioRef} preload="none" loop />
             <audio ref={lampAudioRef} src={deskLampSwitchSound} preload="auto" />
             <ProductNotebook isOpen={isProductOpen} onClose={() => setIsProductOpen(false)} />
             <ContentBooks isOpen={isContentOpen} onClose={() => setIsContentOpen(false)} />

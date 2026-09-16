@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import Style from './Contact.module.scss';
 import contactBackground from '../../assets/contact/contact-background-new.webp';
 import contactMailboxMain from '../../assets/contact/contact-mailbox-main.png';
@@ -41,6 +41,21 @@ const LETTER_RISE_DURATION = 1000;
 
 export default function Contact() {
     const [mailState, setMailState] = useState('idle');
+    const scaleFrameRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const scaleFrame = scaleFrameRef.current;
+        if (!scaleFrame) return undefined;
+
+        const updateScale = () => {
+            scaleFrame.style.setProperty('--contact-canvas-scale', `${scaleFrame.clientWidth / 1662}`);
+        };
+
+        updateScale();
+        const resizeObserver = new ResizeObserver(updateScale);
+        resizeObserver.observe(scaleFrame);
+        return () => resizeObserver.disconnect();
+    }, []);
 
     useEffect(() => {
         if (mailState !== 'letterRising') return undefined;
@@ -57,9 +72,24 @@ export default function Contact() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [mailState]);
 
+    function closeMail() {
+        setMailState('idle');
+    }
+
+    function handleSceneClick(event) {
+        if (event.target !== event.currentTarget) return;
+        if (['openEnvelope', 'letterRising', 'letterReady', 'expandedLetter'].includes(mailState)) {
+            closeMail();
+        }
+    }
+
     function handleMailboxClick(event) {
         event.stopPropagation();
-        setMailState((currentState) => currentState === 'idle' ? 'closedEnvelope' : 'idle');
+        if (mailState === 'idle') {
+            setMailState('closedEnvelope');
+            return;
+        }
+        closeMail();
     }
 
     function handleEnvelopeClick(event) {
@@ -94,8 +124,9 @@ export default function Contact() {
     }
 
     return (
-        <main className={Style.contactScene}>
-            <div className={Style.contactStage} aria-label="Contact mailbox scene">
+        <main className={Style.contactScene} onClick={handleSceneClick}>
+          <div ref={scaleFrameRef} className={Style.contactScaleFrame}>
+            <div className={Style.contactStage} aria-label="Contact mailbox scene" onClick={handleSceneClick}>
                 <img className={Style.contactBackground} src={contactBackground} alt="" />
                 <div className={Style.dandelionLayer} aria-hidden="true">
                     {DANDELIONS.map((dandelion, index) => (
@@ -137,8 +168,8 @@ export default function Contact() {
 
                         {['openEnvelope', 'letterRising', 'letterReady', 'expandedLetter'].includes(mailState) && (
                             <div className={Style.openEnvelopeScene} onClick={(event) => event.stopPropagation()}>
-                                <img className={Style.envelopeBack} style={getLayoutStyle(CONTACT_ENVELOPE_LAYOUT.back)} src={contactEnvelopeOpenBack} alt="" />
-                                <img className={Style.envelopeBase} style={getLayoutStyle(CONTACT_ENVELOPE_LAYOUT.base)} src={contactEnvelopeOpenBase} alt="" />
+                                <img className={Style.envelopeBack} style={getLayoutStyle(CONTACT_ENVELOPE_LAYOUT.back)} src={contactEnvelopeOpenBack} alt="" onClick={(event) => event.stopPropagation()} />
+                                <img className={Style.envelopeBase} style={getLayoutStyle(CONTACT_ENVELOPE_LAYOUT.base)} src={contactEnvelopeOpenBase} alt="" onClick={(event) => event.stopPropagation()} />
                                 <div
                                     className={Style.letterWrapper}
                                     style={getLayoutStyle(mailState === 'expandedLetter' ? EXPANDED_LETTER_LAYOUT : CONTACT_ENVELOPE_LAYOUT.letter)}
@@ -189,6 +220,7 @@ export default function Contact() {
                     <img src={contactMailboxMain} alt="Contact mailbox" draggable="false" />
                 </button>
             </div>
+          </div>
         </main>
     );
 }

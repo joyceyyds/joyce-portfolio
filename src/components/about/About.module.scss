@@ -1,25 +1,46 @@
 .aboutScene {
   --about-stage-scale: 0.86;
-  --about-open-width: min(66vw, calc(68vh * 1535 / 992));
-  --about-open-width: min(66vw, calc(68dvh * 1535 / 992));
-  --about-folder-height: calc(var(--about-open-width) * 992 / 1535);
-  --about-closed-height: calc(var(--about-folder-height) * var(--about-stage-scale));
-  --about-closed-offset: min(calc(var(--about-closed-height) * 994 / 1402 / 2), 22vw);
   position: relative;
   width: 100%;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
-  background-color: #3d281d;
+  background-color: #000000;
 }
 
-.aboutScene::before {
+.aboutScaleFrame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100vw, calc(100vh * 1672 / 941));
+  width: min(100vw, calc(100dvh * 1672 / 941));
+  aspect-ratio: 1672 / 941;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+
+.aboutCanvas {
+  --about-open-width: 1103.52px;
+  --about-folder-height: calc(var(--about-open-width) * 992 / 1535);
+  --about-closed-height: calc(var(--about-folder-height) * var(--about-stage-scale));
+  --about-closed-offset: calc(var(--about-closed-height) * 994 / 1402 / 2);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1672px;
+  height: 941px;
+  overflow: hidden;
+  transform: scale(var(--about-canvas-scale, 1));
+  transform-origin: top left;
+}
+
+.aboutCanvas::before {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
   background-image: url('../../assets/about/about-wood-background.png');
-  background-size: cover;
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   filter: brightness(0.88);
@@ -31,7 +52,7 @@
 .aboutOpenArea,
 .aboutEnvironment {
   position: absolute;
-  inset: clamp(4.5rem, 8vh, 6rem) 0 0;
+  inset: 87px 0 0;
   display: grid;
   place-items: center;
 }
@@ -39,6 +60,8 @@
 .folderArea,
 .aboutOpenArea {
   z-index: 1;
+  scale: 0.88;
+  transform-origin: center center;
 }
 
 .aboutEnvironment {
@@ -51,12 +74,12 @@
   width: var(--about-open-width);
   aspect-ratio: 1535 / 992;
   overflow: visible;
-  transform: translateY(3.5vh) scale(var(--about-stage-scale));
+  transform: translateY(37px) scale(var(--about-stage-scale));
 }
 
 .aboutLightOverlay {
   position: absolute;
-  top: -29.4%;
+  top: calc(-29.4% + 20px);
   left: -19.3%;
   z-index: 15000;
   display: block;
@@ -72,7 +95,7 @@
 }
 
 .folderArea {
-  padding: clamp(1.25rem, 3vw, 2.5rem);
+  padding: 46.5px;
 }
 
 .folderButton {
@@ -86,7 +109,7 @@
   background: transparent;
   cursor: pointer;
   filter: brightness(1.04);
-  transform: translateX(var(--about-closed-offset)) translateY(3.5vh);
+  transform: translateX(var(--about-closed-offset)) translateY(37px);
   transition: transform 250ms ease, filter 600ms ease;
 }
 
@@ -101,7 +124,7 @@
 
 .folderButton:hover,
 .folderButton:focus-visible {
-  transform: translateX(var(--about-closed-offset)) translateY(calc(3.5vh - 3px)) scale(1.01);
+  transform: translateX(var(--about-closed-offset)) translateY(34px) scale(1.01);
 }
 
 .folderButton:focus-visible,
@@ -111,7 +134,7 @@
 }
 
 .aboutOpenArea {
-  padding: clamp(0.75rem, 2vw, 1.5rem);
+  padding: 28px;
   animation: revealOpenFolder 180ms ease-out both;
 }
 
@@ -122,7 +145,7 @@
   overflow: visible;
   isolation: isolate;
   filter: brightness(1.04);
-  transform: translateY(3.5vh) scale(var(--about-stage-scale));
+  transform: translateY(37px) scale(var(--about-stage-scale));
   transition: filter 600ms ease;
 }
 
@@ -163,7 +186,7 @@
 
 .aboutLamp {
   position: absolute;
-  top: -54.3%;
+  top: calc(-54.3% + 30px);
   left: 31.7%;
   z-index: 20000;
   display: block;
@@ -173,6 +196,8 @@
   object-fit: contain;
   pointer-events: none;
   user-select: none;
+  scale: 0.80;
+  transform-origin: center center;
   transition: filter 600ms ease;
 }
 
@@ -191,7 +216,8 @@
   cursor: pointer;
   pointer-events: auto;
   user-select: none;
-  transform-origin: top center;
+  scale: 0.80;
+  transform-origin: center center;
   transition: filter 600ms ease;
 
   img {
@@ -223,7 +249,7 @@
   user-select: none;
 }
 
-.lightOff::before {
+.lightOff .aboutCanvas::before {
   filter: brightness(0.72);
 }
 
@@ -421,7 +447,7 @@
   left: calc(100% + 16px);
   display: block;
   color: rgba(255, 255, 255, 0.92);
-  font-size: clamp(0.55rem, 0.72vw, 0.72rem);
+  font-size: 11.52px;
   font-weight: 500;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -500,20 +526,6 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .aboutScene {
-    --about-open-width: min(84vw, calc(64vh * 1535 / 992));
-    --about-open-width: min(84vw, calc(64dvh * 1535 / 992));
-  }
-
-  .folderArea,
-  .aboutOpenArea {
-    inset: 4rem 0 0;
-  }
-
-  .folderArea {
-    padding: 1.25rem;
-  }
-
   .focusedQuote {
     max-width: 82vw;
   }
@@ -538,7 +550,7 @@
   .folderButton,
   .folderButton:hover,
   .folderButton:focus-visible {
-    transform: translateX(var(--about-closed-offset)) translateY(3.5vh);
+    transform: translateX(var(--about-closed-offset)) translateY(37px);
   }
 
   .aboutOpenArea,

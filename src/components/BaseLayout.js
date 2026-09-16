@@ -6,6 +6,8 @@ import { Box, Grid } from "@mui/material";
 import MultiPageRoutes from './MultiPageRoutes';
 import StudioLoader from './transition/StudioLoader';
 import coffeeMachineSound from '../assets/sounds/coffee-machine.mp3';
+import {WORKS_SCENE_IMAGES} from './portfolio/worksSceneAssets';
+import {preloadImages, wait} from '../utils/preloadImages';
 
 export default function BaseLayout() {
    const location = useLocation()
@@ -63,7 +65,14 @@ export default function BaseLayout() {
          coffeeAudio.play().catch(() => {});
       }
 
-      loaderDisplayTimer.current = setTimeout(() => {
+      const worksPreload = preloadImages(WORKS_SCENE_IMAGES);
+      const minimumDisplay = wait(displayDuration);
+      const maximumWait = wait(4500);
+
+      Promise.all([
+         minimumDisplay,
+         Promise.race([worksPreload, maximumWait]),
+      ]).then(() => {
          if (coffeeAudioRef.current) {
             coffeeAudioRef.current.pause();
             coffeeAudioRef.current.currentTime = 0;
@@ -78,7 +87,7 @@ export default function BaseLayout() {
                isStudioTransitioning.current = false;
             }, fadeDuration);
          }, paintDelay);
-      }, displayDuration);
+      });
    }
 
    return (

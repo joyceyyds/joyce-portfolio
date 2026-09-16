@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import Style from './About.module.scss';
 import folderClosed from '../../assets/about/folder-closed.png';
@@ -46,11 +46,27 @@ export default function About({innerRef}) {
     const [isSwitchAnimating, setIsSwitchAnimating] = useState(false);
     const [isContactMailboxPressed, setIsContactMailboxPressed] = useState(false);
     const stageRef = useRef(null);
+    const scaleFrameRef = useRef(null);
     const pointerActionRef = useRef(null);
     const switchToggleTimerRef = useRef(null);
     const nextStackOrderRef = useRef(40);
     const switchAudioRef = useRef(null);
     const contactMailboxPressTimerRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const scaleFrame = scaleFrameRef.current;
+        if (!scaleFrame) return undefined;
+
+        const updateScale = () => {
+            scaleFrame.style.setProperty('--about-canvas-scale', `${scaleFrame.clientWidth / 1672}`);
+        };
+
+        updateScale();
+        const resizeObserver = new ResizeObserver(updateScale);
+        resizeObserver.observe(scaleFrame);
+
+        return () => resizeObserver.disconnect();
+    }, []);
 
     function handleOpenAbout() {
         // Future sequence: closed -> opening video -> open.
@@ -172,43 +188,45 @@ export default function About({innerRef}) {
             id="about"
         >
             <audio ref={switchAudioRef} src={pullSwitchSound} preload="auto" />
-            <div className={Style.aboutEnvironment}>
-                <div className={Style.aboutEnvironmentStage}>
-                    <img className={Style.aboutLightOverlay} src={aboutLightOverlay} alt="" />
-                    <img className={`${Style.aboutLightObject} ${Style.aboutLamp}`} src={aboutLamp} alt="" />
-                    <button
-                        type="button"
-                        className={`${Style.aboutSwitchLamp} ${isSwitchAnimating ? Style.switchAnimating : ''}`}
-                        aria-label="Toggle the lamp"
-                        aria-pressed={!isLightOn}
-                        aria-disabled={isSwitchAnimating}
-                        onClick={handleSwitchClick}
-                        onAnimationEnd={() => setIsSwitchAnimating(false)}
-                    >
-                        <img src={aboutSwitchLamp} alt="" draggable="false" />
-                    </button>
+            <div ref={scaleFrameRef} className={Style.aboutScaleFrame}>
+              <div className={Style.aboutCanvas}>
+                <div className={Style.aboutEnvironment}>
+                    <div className={Style.aboutEnvironmentStage}>
+                        <img className={Style.aboutLightOverlay} src={aboutLightOverlay} alt="" />
+                        <img className={`${Style.aboutLightObject} ${Style.aboutLamp}`} src={aboutLamp} alt="" />
+                        <button
+                            type="button"
+                            className={`${Style.aboutSwitchLamp} ${isSwitchAnimating ? Style.switchAnimating : ''}`}
+                            aria-label="Toggle the lamp"
+                            aria-pressed={!isLightOn}
+                            aria-disabled={isSwitchAnimating}
+                            onClick={handleSwitchClick}
+                            onAnimationEnd={() => setIsSwitchAnimating(false)}
+                        >
+                            <img src={aboutSwitchLamp} alt="" draggable="false" />
+                        </button>
+                    </div>
                 </div>
-            </div>
-            {aboutState === 'closed' ? (
-                <div className={Style.folderArea}>
-                    <button
-                        type="button"
-                        className={Style.folderButton}
-                        onClick={handleOpenAbout}
-                        aria-label="Open Joyce's profile folder"
-                    >
-                        <img
-                            className={Style.folderClosed}
-                            src={folderClosed}
-                            alt="Joyce's closed profile folder"
-                        />
-                    </button>
-                </div>
-            ) : (
-                <div className={Style.aboutOpenArea}>
-                    <div ref={stageRef} className={Style.aboutOpenStage}>
-                        <img className={Style.folderOpen} src={folderOpen} alt="Joyce's open profile folder" />
-                        <span className={Style.lampGlow} aria-hidden="true" />
+                {aboutState === 'closed' ? (
+                    <div className={Style.folderArea}>
+                        <button
+                            type="button"
+                            className={Style.folderButton}
+                            onClick={handleOpenAbout}
+                            aria-label="Open Joyce's profile folder"
+                        >
+                            <img
+                                className={Style.folderClosed}
+                                src={folderClosed}
+                                alt="Joyce's closed profile folder"
+                            />
+                        </button>
+                    </div>
+                ) : (
+                    <div className={Style.aboutOpenArea}>
+                        <div ref={stageRef} className={Style.aboutOpenStage}>
+                            <img className={Style.folderOpen} src={folderOpen} alt="Joyce's open profile folder" />
+                            <span className={Style.lampGlow} aria-hidden="true" />
 
                         {INTERACTIVE_ITEMS.map((item) => (
                             <button
@@ -250,9 +268,11 @@ export default function About({innerRef}) {
                             </span>
                         </button>
 
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+              </div>
+            </div>
 
             {focusedItem && (
                 <div
