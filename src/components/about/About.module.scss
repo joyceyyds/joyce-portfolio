@@ -500,9 +500,9 @@
   display: block;
   width: auto;
   height: auto;
-  max-width: 80vw;
-  max-height: 82vh;
-  max-height: 82dvh;
+  max-width: 54vw;
+  max-height: 60vh;
+  max-height: 60dvh;
   object-fit: contain;
   cursor: default;
   animation: revealFocusedItem 200ms ease both;
@@ -511,10 +511,17 @@
 .focusedQuote {
   width: auto;
   height: auto;
-  max-width: 48vw;
-  max-height: 55vh;
-  max-height: 55dvh;
+  max-width: 34vw;
+  max-height: 42vh;
+  max-height: 42dvh;
   object-fit: contain;
+}
+
+.focusedThingsILike,
+.focusedWelcomeTag {
+  max-width: 43.2vw;
+  max-height: 48vh;
+  max-height: 48dvh;
 }
 
 @keyframes revealOpenFolder {
@@ -538,9 +545,24 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) and (orientation: portrait) {
+  .lightboxImage {
+    max-width: 72vw;
+    max-height: 62vh;
+    max-height: 62dvh;
+  }
+
   .focusedQuote {
-    max-width: 82vw;
+    max-width: 68vw;
+    max-height: 54vh;
+    max-height: 54dvh;
+  }
+
+  .focusedThingsILike,
+  .focusedWelcomeTag {
+    max-width: 57.6vw;
+    max-height: 49.6vh;
+    max-height: 49.6dvh;
   }
 
 }

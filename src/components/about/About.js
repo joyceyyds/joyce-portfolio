@@ -317,7 +317,7 @@ export default function About({innerRef}) {
                     onClick={() => setFocusedItem(null)}
                 >
                     <img
-                        className={`${Style.lightboxImage} ${focusedItem.name === 'quote-paper' ? Style.focusedQuote : ''}`}
+                        className={`${Style.lightboxImage} ${focusedItem.name === 'quote-paper' ? Style.focusedQuote : ''} ${focusedItem.name === 'things-i-like' ? Style.focusedThingsILike : ''} ${focusedItem.name === 'welcome-tag' ? Style.focusedWelcomeTag : ''}`}
                         src={focusedItem.src}
                         alt={focusedItem.alt}
                         onClick={(event) => event.stopPropagation()}

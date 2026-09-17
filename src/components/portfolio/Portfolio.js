@@ -26,6 +26,7 @@ import {
 } from './worksSceneAssets';
 import sunflowerMusic from '../../assets/sounds/Sunflower.mp3';
 import deskLampSwitchSound from '../../assets/sounds/desk-lamp-switch.mp3';
+import recordPlayerClickSound from '../../assets/sounds/record-player-click.mp3';
 import {
     preloadModulesInIdle,
     preloadVisualModuleWithTimeout,
@@ -70,6 +71,8 @@ export default function Portfolio({innerRef}) {
     const [isSceneReady, setIsSceneReady] = useState(false);
     const lampAudioRef = useRef(null);
     const musicAudioRef = useRef(null);
+    const turntableClickAudioRef = useRef(null);
+    const pendingTurntableStartRef = useRef(false);
     const turntablePlayTimerRef = useRef(null);
     const turntableUnlockTimerRef = useRef(null);
     const pendingModuleRef = useRef(new Set());
@@ -114,37 +117,70 @@ export default function Portfolio({innerRef}) {
     }
 
     function handleTurntableClick() {
-        if (isTurntableLocked) return;
-
+        const clickAudio = turntableClickAudioRef.current;
         const audio = musicAudioRef.current;
-        if (audio) {
-            audio.volume = 0.2;
-            if (!audio.getAttribute('src')) {
-                audio.src = sunflowerMusic;
-                audio.load();
-            }
+        const hasPendingStart = pendingTurntableStartRef.current;
+
+        if (turntablePlayTimerRef.current) {
+            window.clearTimeout(turntablePlayTimerRef.current);
+            turntablePlayTimerRef.current = null;
         }
+        pendingTurntableStartRef.current = false;
+
+        if (clickAudio) {
+            if (!clickAudio.getAttribute('src')) {
+                clickAudio.src = recordPlayerClickSound;
+                clickAudio.load();
+            }
+            clickAudio.volume = 0.35;
+            clickAudio.currentTime = 0;
+        }
+
+        if (isTurntableLocked && !hasPendingStart) {
+            clickAudio?.play().catch(() => {});
+            return;
+        }
+
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const playDelay = reducedMotion ? 0 : 420;
         const lockDelay = reducedMotion ? 50 : 450;
 
+        if (turntableUnlockTimerRef.current) {
+            window.clearTimeout(turntableUnlockTimerRef.current);
+        }
         setIsTurntableLocked(true);
 
-        if (isPlaying) {
+        if (isPlaying || hasPendingStart) {
             audio?.pause();
             setIsPlaying(false);
             setIsTonearmEngaged(false);
+            clickAudio?.play().catch(() => {});
         } else {
+            if (audio) {
+                audio.volume = 0.2;
+                if (!audio.getAttribute('src')) {
+                    audio.src = sunflowerMusic;
+                    audio.load();
+                }
+            }
+
             setIsTonearmEngaged(true);
+            pendingTurntableStartRef.current = true;
+            clickAudio?.play().catch(() => {});
             turntablePlayTimerRef.current = window.setTimeout(() => {
-                if (!audio) return;
+                turntablePlayTimerRef.current = null;
+                if (!pendingTurntableStartRef.current) return;
+                pendingTurntableStartRef.current = false;
+                if (!audio) {
+                    setIsTonearmEngaged(false);
+                    return;
+                }
                 audio.play()
                     .then(() => setIsPlaying(true))
                     .catch(() => {
                         setIsPlaying(false);
                         setIsTonearmEngaged(false);
                     });
-            }, playDelay);
+            }, 700);
         }
 
         turntableUnlockTimerRef.current = window.setTimeout(() => {
@@ -171,6 +207,11 @@ export default function Portfolio({innerRef}) {
 
     useEffect(() => () => {
         musicAudioRef.current?.pause();
+        if (turntableClickAudioRef.current) {
+            turntableClickAudioRef.current.pause();
+            turntableClickAudioRef.current.currentTime = 0;
+        }
+        pendingTurntableStartRef.current = false;
         if (turntablePlayTimerRef.current) {
             window.clearTimeout(turntablePlayTimerRef.current);
         }
@@ -274,7 +315,7 @@ export default function Portfolio({innerRef}) {
                     type={'button'}
                     className={Style.turntable}
                     onClick={handleTurntableClick}
-                    disabled={isTurntableLocked}
+                    aria-disabled={isTurntableLocked}
                     aria-label={isPlaying ? 'Pause background music' : 'Play background music'}
                     aria-pressed={isPlaying}
                 >
@@ -376,6 +417,7 @@ export default function Portfolio({innerRef}) {
                 </div>
             )}
             <audio ref={musicAudioRef} preload="none" loop />
+            <audio ref={turntableClickAudioRef} preload="none" />
             <audio ref={lampAudioRef} src={deskLampSwitchSound} preload="auto" />
             <ProductNotebook isOpen={isProductOpen} onClose={() => setIsProductOpen(false)} />
             <ContentBooks isOpen={isContentOpen} onClose={() => setIsContentOpen(false)} />
