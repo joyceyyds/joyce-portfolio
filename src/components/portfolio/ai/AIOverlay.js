@@ -44,10 +44,18 @@ const AI_VIDEO_ITEMS = [
 export const aiProjects = [
     {
         id: 'ai-pet-video',
-        title: 'AI 视频创作',
+        title: 'AI 视频',
         backColor: '#D6A33F',
         frontColor: '#F4D36F',
         frontBottomColor: '#E8B94F',
+    },
+    {
+        id: 'vibe-coding',
+        title: 'Vibe Coding',
+        backColor: '#C97936',
+        frontColor: '#E8A052',
+        frontBottomColor: '#D8873E',
+        hasDetail: false,
     },
 ];
 
@@ -103,7 +111,7 @@ export default function AIOverlay({isOpen, selectedProject, onSelect, onClose}) 
                             defaultIndex={2}
                             expandRatio={0.52}
                             trigger={'hover'}
-                            height={360}
+                            height={'var(--ai-gallery-height)'}
                             gap={10}
                             radius={16}
                             duration={0.6}
@@ -129,7 +137,7 @@ export default function AIOverlay({isOpen, selectedProject, onSelect, onClose}) 
                                         frontColor={project.frontColor}
                                         frontBottomColor={project.frontBottomColor}
                                         selected={selectedProject === project.id}
-                                        onClick={() => onSelect(project.id)}
+                                        onClick={project.hasDetail === false ? undefined : () => onSelect(project.id)}
                                     />
                                 </div>
                                 <span className={Style.projectTitle}>{project.title}</span>

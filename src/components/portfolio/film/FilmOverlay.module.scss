@@ -3,7 +3,7 @@
 .playerInterface{display:flex;align-items:center;justify-content:center;width:100%;height:100%;}
 .videoFrame{display:flex;align-items:center;justify-content:center;max-width:90vw;max-height:80vh;}
 .video{display:block;width:auto;height:auto;max-width:90vw;max-height:80vh;object-fit:contain;}
-.visualGroup{position:absolute;inset:0;transform:translateY(-12px);}
+.visualGroup{position:absolute;inset:0;transform:translateY(-12px) scale(var(--film-composition-scale,1));transform-origin:center center;}
 .carouselFrame{position:absolute;top:4%;left:0;width:100%;height:82%;}
 .filmInfo{position:absolute;top:calc(45% + 225.5px);right:0;left:0;display:grid;justify-items:center;gap:6px;}
 .filmInfo strong{font-size:clamp(1rem,1.5vw,1.35rem);font-weight:500;}

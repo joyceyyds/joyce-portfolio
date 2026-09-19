@@ -121,6 +121,26 @@
   }
 }
 
+@media (max-width: 768px) and (orientation: portrait) {
+  .spread {
+    transform: scale(0.70);
+    transform-origin: center center;
+  }
+}
+
+@media (max-width: 960px) and (max-height: 500px) and (orientation: landscape) {
+  .spread {
+    transform: scale(0.58);
+    transform-origin: center center;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 500px) and (orientation: landscape) {
+  .spread {
+    transform: scale(0.62);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card {
     transition-duration: 1ms;

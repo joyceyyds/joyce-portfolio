@@ -10,10 +10,10 @@ import lampSwitch from '../../assets/works/lamp-switch.png';
 import turntableBase from '../../assets/works/turntable/turntable-base.png';
 import turntableVinyl from '../../assets/works/turntable/turntable-vinyl.png';
 import turntableTonearm from '../../assets/works/turntable/turntable-tonearm.png';
-import photoFrame from '../../assets/works/photo-frame.png';
+import photoFrame from '../../assets/works/photo-frame-optimized.png';
 import photoFrameOpen from '../../assets/works/photo-frame-open.png';
-import waffle from '../../assets/works/waffle.png';
-import icedCoffee from '../../assets/works/iced-coffee.png';
+import waffle from '../../assets/works/waffle-optimized.png';
+import icedCoffee from '../../assets/works/iced-coffee-optimized.png';
 
 export {
   worksDay,

@@ -21,6 +21,8 @@ export default function AccordionGallery({
     overlayColor = '#060010',
     textColor = '#ffffff',
 }) {
+    const galleryHeight = typeof height === 'number' ? `${height}px` : height;
+
     const safeDefaultIndex = Math.min(Math.max(defaultIndex, 0), Math.max(items.length - 1, 0));
     const [activeIndex, setActiveIndex] = useState(safeDefaultIndex);
     const galleryRef = useRef(null);
@@ -111,7 +113,7 @@ export default function AccordionGallery({
             ref={galleryRef}
             className={'accordion-gallery'}
             style={{
-                height: `${height}px`,
+                height: galleryHeight,
                 gap: `${gap}px`,
                 '--ag-radius': `${radius}px`,
                 '--ag-accent': accentColor,

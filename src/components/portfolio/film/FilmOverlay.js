@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import DepthCarousel from './DepthCarousel';
 import Style from './FilmOverlay.module.scss';
 import yuwang from '../../../assets/works/film/yuwang.webp';
@@ -17,6 +17,42 @@ export default function FilmOverlay({isOpen, onClose}) {
     const [activeFilm, setActiveFilm] = useState(filmItems[0]);
     const [playingFilm, setPlayingFilm] = useState(null);
     const videoRef = useRef(null);
+    const visualGroupRef = useRef(null);
+
+    useLayoutEffect(() => {
+        const visualGroup = visualGroupRef.current;
+        if (!isOpen || playingFilm || !visualGroup) return undefined;
+
+        const updateCompositionScale = () => {
+            const viewportWidth = window.visualViewport?.width || window.innerWidth;
+            const viewportHeight = window.visualViewport?.height || window.innerHeight;
+            const isMobilePortrait = viewportWidth <= 768 && viewportHeight >= viewportWidth;
+            const isMobileLandscape = viewportWidth <= 960 && viewportHeight <= 500 && viewportWidth > viewportHeight;
+
+            let scale = 1;
+            if (isMobilePortrait || isMobileLandscape) {
+                const targetWidth = viewportWidth * (isMobilePortrait ? 0.76 : 0.72);
+                const targetHeight = viewportHeight * (isMobilePortrait ? 0.68 : 0.58);
+                const widthScale = targetWidth / visualGroup.offsetWidth;
+                const heightScale = targetHeight / visualGroup.offsetHeight;
+                scale = Math.min(widthScale, heightScale, 1);
+            }
+
+            visualGroup.style.setProperty('--film-composition-scale', `${scale}`);
+        };
+
+        updateCompositionScale();
+        const resizeObserver = new ResizeObserver(updateCompositionScale);
+        resizeObserver.observe(visualGroup);
+        window.addEventListener('resize', updateCompositionScale);
+        window.visualViewport?.addEventListener('resize', updateCompositionScale);
+
+        return () => {
+            resizeObserver.disconnect();
+            window.removeEventListener('resize', updateCompositionScale);
+            window.visualViewport?.removeEventListener('resize', updateCompositionScale);
+        };
+    }, [isOpen, playingFilm]);
 
     function closePlayer() {
         if (videoRef.current) {
@@ -77,7 +113,7 @@ export default function FilmOverlay({isOpen, onClose}) {
                         preload="metadata"
                     />
                 </div>
-            ) : <div className={Style.visualGroup}>
+            ) : <div ref={visualGroupRef} className={Style.visualGroup}>
                 <div className={Style.carouselFrame}>
                     <DepthCarousel
                         items={filmItems}
